@@ -39,7 +39,11 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-PROJECT_APPS = ["profiles.apps.ProfilesConfig", "sports.apps.SportsConfig"]
+PROJECT_APPS = [
+    "profiles.apps.ProfilesConfig",
+    "sports.apps.SportsConfig",
+    "core.apps.CoreConfig",
+]
 
 THIRD_PARTY_APPS = ["graphene_django"]
 

@@ -9,6 +9,7 @@ black = "*"
 [packages]
 django = "*"
 graphene-django = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"
