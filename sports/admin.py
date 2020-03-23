@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Sport
 
-# Register your models here.
+
+class SportsAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Sport, SportsAdmin)
