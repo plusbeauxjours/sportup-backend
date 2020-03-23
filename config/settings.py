@@ -40,9 +40,12 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
+    "core.apps.CoreConfig",
+    "events.apps.EventsConfig",
+    "feed.apps.FeedConfig",
     "profiles.apps.ProfilesConfig",
     "sports.apps.SportsConfig",
-    "core.apps.CoreConfig",
+    "teams.apps.TeamsConfig",
 ]
 
 THIRD_PARTY_APPS = ["graphene_django"]
