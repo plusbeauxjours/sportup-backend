@@ -14,15 +14,14 @@ class Profile(models.Model):
     )
 
 
-class userPlaysSport(core_models.TimeStampedModel):
+class UserPlaysSport(core_models.TimeStampedModel):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     sport = models.ForeignKey(sport_models.Sport, on_delete=models.CASCADE)
     rating = models.FloatField(blank=True, null=True)
-
     rated_by = models.ManyToManyField(User, through="UserRatesUserSport", blank=True)
 
 
 class UserRatesUserSport(core_models.TimeStampedModel):
     rater = models.ForeignKey(User, on_delete=models.CASCADE)
-    rated_user_sport = models.ForeignKey(userPlaysSport, on_delete=models.CASCADE)
+    rated_user_sport = models.ForeignKey(UserPlaysSport, on_delete=models.CASCADE)
     rating = models.IntegerField()

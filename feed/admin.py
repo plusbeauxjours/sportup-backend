@@ -1,9 +1,22 @@
 from django.contrib import admin
-from .models import Post
+from . import models
 
 
+@admin.register(models.Post)
 class PostAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        "id",
+        "score",
+        "text",
+        "poster_by",
+    )
 
 
-admin.site.register(Post, PostAdmin)
+@admin.register(models.UserPostInteraction)
+class UserPostInteractionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "post",
+        "interaction",
+    )

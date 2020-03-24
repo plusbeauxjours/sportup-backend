@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Sport
+from . import models
 
 
+@admin.register(models.Sport)
 class SportsAdmin(admin.ModelAdmin):
-    pass
-
-
-admin.site.register(Sport, SportsAdmin)
+    list_display = (
+        "id",
+        "name",
+    )
