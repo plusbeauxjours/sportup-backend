@@ -12,9 +12,8 @@ class EventsAdmin(admin.ModelAdmin):
     )
 
 
-
 @admin.register(models.Registration)
-class EventsAdmin(admin.ModelAdmin):
+class RegistrationAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
@@ -24,12 +23,10 @@ class EventsAdmin(admin.ModelAdmin):
     )
 
 
-
 @admin.register(models.RegisteredPlayer)
-class EventsAdmin(admin.ModelAdmin):
+class RegisteredPlayerAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
         "registration",
     )
-
