@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
 from core import models as core_models
-from sports import models as sport_models
 
 
 class Event(core_models.TimeStampedModel):
@@ -9,7 +7,7 @@ class Event(core_models.TimeStampedModel):
     description = models.TextField(blank=True, null=True)
     cover_img = models.ImageField(upload_to="event_cover_imgs/", blank=True, null=True)
     document = models.FileField(upload_to="event_docs/", blank=True, null=True)
-    sport = models.ForeignKey(sport_models.Sport, on_delete=models.PROTECT)
+    sport = models.ForeignKey("sports.Sport", on_delete=models.PROTECT)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     start_time = models.TimeField(blank=True, null=True)
@@ -17,7 +15,7 @@ class Event(core_models.TimeStampedModel):
     minimum_members = models.IntegerField()
     maximum_members = models.IntegerField()
     expected_teams = models.IntegerField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey("users.User", on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
@@ -29,7 +27,7 @@ class Event(core_models.TimeStampedModel):
 class Registration(models.Model):
     name = models.CharField(max_length=20)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    registered_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    registered_by = models.ForeignKey("users.User", on_delete=models.CASCADE)
     registered_on = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
     captain_name = models.CharField(max_length=20)

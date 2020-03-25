@@ -4,8 +4,6 @@ from graphene_django.types import DjangoObjectType
 
 
 class UserType(DjangoObjectType):
-    name = graphene.String()
-
     class Meta:
         model = get_user_model()
 
@@ -13,6 +11,16 @@ class UserType(DjangoObjectType):
         return self.get_full_name()
 
 
+class MeReponse(graphene.ObjectType):
+    user = graphene.Field(UserType)
+
+
+class GetUserReponse(graphene.ObjectType):
+    user = graphene.Field(UserType)
+
+
 class CreateUserReponse(graphene.ObjectType):
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
+
+

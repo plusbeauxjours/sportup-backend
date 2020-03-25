@@ -43,7 +43,7 @@ PROJECT_APPS = [
     "core.apps.CoreConfig",
     "events.apps.EventsConfig",
     "feed.apps.FeedConfig",
-    "profiles.apps.ProfilesConfig",
+    "users.apps.UsersConfig",
     "sports.apps.SportsConfig",
     "teams.apps.TeamsConfig",
 ]
@@ -139,3 +139,5 @@ GRAPHENE = {
     "SCHEMA": "config.schema.schema",
     "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware",],
 }
+
+AUTH_USER_MODEL = "users.User"

@@ -1,32 +1,30 @@
 import graphene
 import graphql_jwt
 
-from auth import schema as auth_schema
-from profiles import schema as profiles_schema
-from teams import schema as teams_schema
+from users import schema as user_schema
+from teams import schema as team_schema
 from feed import schema as feed_schema
-from sports import schema as sports_schema
-from events import schema as events_schema
+from sports import schema as sport_schema
+from events import schema as event_schema
 
 
 class Query(
-    profiles_schema.Query,
-    teams_schema.Query,
+    user_schema.Query,
+    team_schema.Query,
     feed_schema.Query,
-    sports_schema.Query,
-    events_schema.Query,
+    sport_schema.Query,
+    event_schema.Query,
     graphene.ObjectType,
 ):
     pass
 
 
 class Mutation(
-    auth_schema.Mutation,
-    profiles_schema.Mutation,
-    teams_schema.Mutation,
+    user_schema.Mutation,
+    team_schema.Mutation,
     feed_schema.Mutation,
-    sports_schema.Mutation,
-    events_schema.Mutation,
+    sport_schema.Mutation,
+    event_schema.Mutation,
     graphene.ObjectType,
 ):
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
