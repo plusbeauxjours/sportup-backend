@@ -19,3 +19,23 @@ class CustomUserAdmin(UserAdmin):
         "last_name",
         "gender",
     )
+
+
+@admin.register(models.UserPlaysSport)
+class UserPlaysSportAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "user",
+        "rating",
+        "sport",
+    )
+
+
+@admin.register(models.UserRatesSport)
+class UserRatesSportAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "rater",
+        "rated_user_sport",
+        "rating",
+    )

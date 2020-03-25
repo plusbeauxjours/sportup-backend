@@ -30,3 +30,11 @@ class FollowUserResponse(graphene.ObjectType):
 
 class UnfollowUserResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class AddSportsResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+
+
+class RemoveSportsResponse(graphene.ObjectType):
+    ok = graphene.Boolean()

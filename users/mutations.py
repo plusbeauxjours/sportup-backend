@@ -29,19 +29,20 @@ class CreateUser(graphene.Mutation):
         return types.CreateUserReponse(ok=True, user=user)
 
 
-@login_required
 class FollowUser(graphene.Mutation):
     class Arguments:
         uuid = graphene.String(required=True)
 
     Output = types.FollowUserResponse
 
+    @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
         uuid = kwargs.get("uuid")
+
         try:
             user_to_follow = models.User.objects.get(uuid=uuid)
-            user.profile.follow_user(user_to_follow)
+            user.follow_user(user_to_follow)
             user.save()
             return types.FollowUserResponse(ok=True)
 
@@ -49,21 +50,56 @@ class FollowUser(graphene.Mutation):
             return types.FollowUserResponse(ok=False)
 
 
-@login_required
 class UnfollowUser(graphene.Mutation):
     class Arguments:
         uuid = graphene.String(required=True)
 
     Output = types.UnfollowUserResponse
 
+    @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
         uuid = kwargs.get("uuid")
+
         try:
-            user_to_follow = models.User.objects.get(uuid=uuid)
-            user.profile.follow_user(user_to_follow)
+            user_to_unfollow = models.User.objects.get(uuid=uuid)
+            user.unfollow_user(user_to_unfollow)
             user.save()
             return types.UnfollowUserResponse(ok=True)
 
         except models.User.DoesNotExist:
             return types.UnfollowUserResponse(ok=False)
+
+
+class AddSports(graphene.Mutation):
+    class Arguments:
+        sport_ids = graphene.List(graphene.Int, required=True)
+
+    Output = types.AddSportsResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        sport_ids = kwargs.get("sport_ids")
+
+        user.add_sports(sport_ids)
+        user.save()
+
+        return types.AddSportsResponse(ok=True)
+
+
+class RemoveSports(graphene.Mutation):
+    class Arguments:
+        sport_ids = graphene.List(graphene.Int, required=True)
+
+    Output = types.AddSportsResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        sport_ids = kwargs.get("sport_ids")
+
+        user.remove_sports(sport_ids)
+        user.save()
+
+        return types.RemoveSportsResponse(ok=True)
