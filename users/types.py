@@ -25,6 +25,8 @@ class UserPlaysSportType(DjangoObjectType):
 
 
 class UserType(DjangoObjectType):
+    followers = graphene.List(UserType, page_num=graphene.Int())
+    following = graphene.List(UserType, page_num=graphene.Int())
     sports = graphene.List(UserPlaysSportType)
     following_count = graphene.Int()
     followers_count = graphene.Int()
@@ -37,7 +39,7 @@ class UserType(DjangoObjectType):
         return self.userplayssport_set.all()
 
     def resolve_followers(self, info, page_num=1):
-        qs = models.User.objects.filter(profile__in=self.user.followers.all())
+        qs = models.User.objects.filter(profile__in=self.followers.all())
         pg = Paginator(qs, 12)
         return pg.get_page(page_num)
 
@@ -50,18 +52,15 @@ class UserType(DjangoObjectType):
         return self.following.count()
 
     def resolve_followers_count(self, info):
-        return self.user.followers.count()
+        return self.followers.count()
 
     @login_required
     def resolve_is_following(self, info):
         user = info.context.user
-        if user.is_anonymous:
-            raise Exception("Not authenticated!")
-
         try:
-            f = user.following.get(pk=self.pkd)
+            f = user.following.get(pk=self.pk)
             return True
-        except models.ObjectDoesNotExist:
+        except models.User.DoesNotExist:
             return False
 
 

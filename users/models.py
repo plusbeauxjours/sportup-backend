@@ -24,6 +24,7 @@ class User(AbstractUser):
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
     following = models.ManyToManyField("self", related_name="followers", blank=True)
+    followers = models.ManyToManyField("self", related_name="following", blank=True)
     sports = models.ManyToManyField(
         "sports.Sport", through="UserPlaysSport", blank=True
     )
