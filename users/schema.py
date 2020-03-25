@@ -11,3 +11,6 @@ class Query(object):
 class Mutation(object):
 
     create_user = mutations.CreateUser.Field(required=True)
+    follow_user = mutations.FollowUser.Field(required=True)
+    unfollow_user = mutations.UnfollowUser.Field(required=True)
+

@@ -27,6 +27,12 @@ class User(AbstractUser):
         "sports.Sport", through="UserPlaysSport", blank=True
     )
 
+    def follow_user(self, user):
+        self.following.add(user)
+
+    def unfollow_user(self, user):
+        self.following.remove(user)
+
 
 class UserPlaysSport(core_models.TimeStampedModel):
     user = models.ForeignKey(

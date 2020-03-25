@@ -24,3 +24,9 @@ class CreateUserReponse(graphene.ObjectType):
     user = graphene.Field(UserType)
 
 
+class FollowUserResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+
+
+class UnfollowUserResponse(graphene.ObjectType):
+    ok = graphene.Boolean()

@@ -13,8 +13,11 @@ def resolve_me(self, info):
 @login_required
 def resolve_get_user(self, info, **kwargs):
 
-    uuid = kwargs.get("uuid", 0)
+    uuid = kwargs.get("uuid")
 
-    if uuid:
+    try:
         user = User.objects.get(uuid=uuid)
         return types.GetUserReponse(user=user)
+
+    except User.DoesNotExist:
+        return types.GetUserReponse(user=None)

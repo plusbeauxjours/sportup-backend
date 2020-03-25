@@ -13,6 +13,9 @@ class CustomUserAdmin(UserAdmin):
     )
 
     list_display = (
+        "username",
         "uuid",
+        "first_name",
+        "last_name",
         "gender",
     )
