@@ -1,5 +1,4 @@
-from . import types
-from django.contrib.auth.models import User
+from . import types, models
 from graphql_jwt.decorators import login_required
 
 
@@ -16,8 +15,8 @@ def resolve_get_user(self, info, **kwargs):
     uuid = kwargs.get("uuid")
 
     try:
-        user = User.objects.get(uuid=uuid)
+        user = models.User.objects.get(uuid=uuid)
         return types.GetUserReponse(user=user)
 
-    except User.DoesNotExist:
+    except models.User.DoesNotExist:
         return types.GetUserReponse(user=None)

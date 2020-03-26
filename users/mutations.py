@@ -1,5 +1,6 @@
 import graphene
 from . import types, models
+from sports import models as sport_models
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required
 
@@ -42,7 +43,7 @@ class FollowUser(graphene.Mutation):
 
         try:
             user_to_follow = models.User.objects.get(uuid=uuid)
-            user.follow_user(user_to_follow)
+            user.following.add(user_to_follow)
             user.save()
             return types.FollowUserResponse(ok=True)
 
@@ -63,7 +64,7 @@ class UnfollowUser(graphene.Mutation):
 
         try:
             user_to_unfollow = models.User.objects.get(uuid=uuid)
-            user.unfollow_user(user_to_unfollow)
+            user.following.remove(user_to_unfollow)
             user.save()
             return types.UnfollowUserResponse(ok=True)
 
@@ -82,7 +83,9 @@ class AddSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        user.add_sports(sport_ids)
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+        for sport in sports:
+            ups = models.UserPlaysSport.objects.create(user=user, sport=sport)
         user.save()
 
         return types.AddSportsResponse(ok=True)
@@ -99,7 +102,8 @@ class RemoveSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        user.remove_sports(sport_ids)
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+        models.UserPlaysSport.objects.filter(user=user, sport__in=sports).delete()
         user.save()
 
         return types.RemoveSportsResponse(ok=True)

@@ -1,15 +1,13 @@
 import graphene
 from . import models
-from django.contrib.auth import get_user_model
-from graphene_django.types import DjangoObjectType
 from django.core.paginator import Paginator
+from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 
 class UserPlaysSportType(DjangoObjectType):
     sport_id = graphene.Int()
     name = graphene.String()
-    img_url = graphene.String()
 
     class Meta:
         model = models.UserPlaysSport
@@ -20,39 +18,22 @@ class UserPlaysSportType(DjangoObjectType):
     def resolve_name(self, info):
         return self.sport.name
 
-    def resolve_img_url(self, info):
-        return self.sport.img_path
+
+class FollowType(DjangoObjectType):
+    class Meta:
+        model = models.User
 
 
 class UserType(DjangoObjectType):
-    followers = graphene.List(UserType, page_num=graphene.Int())
-    following = graphene.List(UserType, page_num=graphene.Int())
-    sports = graphene.List(UserPlaysSportType)
-    following_count = graphene.Int()
-    followers_count = graphene.Int()
     is_following = graphene.Boolean()
+    sports = graphene.List(UserPlaysSportType)
+    followers = graphene.List(FollowType, page_num=graphene.Int())
+    following = graphene.List(FollowType, page_num=graphene.Int())
+    followers_count = graphene.Int(source="followers_count")
+    following_count = graphene.Int(source="following_count")
 
     class Meta:
-        model = get_user_model()
-
-    def resolve_sports(self, info):
-        return self.userplayssport_set.all()
-
-    def resolve_followers(self, info, page_num=1):
-        qs = models.User.objects.filter(profile__in=self.followers.all())
-        pg = Paginator(qs, 12)
-        return pg.get_page(page_num)
-
-    def resolve_following(self, info, page_num=1):
-        qs = self.following.all()
-        pg = Paginator(qs, 12)
-        return pg.get_page(page_num)
-
-    def resolve_following_count(self, info):
-        return self.following.count()
-
-    def resolve_followers_count(self, info):
-        return self.followers.count()
+        model = models.User
 
     @login_required
     def resolve_is_following(self, info):
@@ -62,6 +43,19 @@ class UserType(DjangoObjectType):
             return True
         except models.User.DoesNotExist:
             return False
+
+    def resolve_sports(self, info, **kwargs):
+        return self.UserPlaysSport_user.all()
+
+    def resolve_followers(self, info, page_num=1):
+        qs = models.User.objects.filter(profile__in=self.user.followers.all())
+        pg = Paginator(qs, 12)
+        return pg.get_page(page_num)
+
+    def resolve_following(self, info, page_num=1):
+        qs = self.following.all()
+        pg = Paginator(qs, 12)
+        return pg.get_page(page_num)
 
 
 class MeReponse(graphene.ObjectType):

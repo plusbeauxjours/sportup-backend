@@ -5,7 +5,10 @@ from . import types, queries, mutations
 class Query(object):
     me = graphene.Field(types.MeReponse, resolver=queries.resolve_me, required=True)
     get_user = graphene.Field(
-        types.GetUserReponse, resolver=queries.resolve_get_user, required=True
+        types.GetUserReponse,
+        resolver=queries.resolve_get_user,
+        required=True,
+        args={"uuid": graphene.String(required=True),},
     )
 
 
@@ -16,4 +19,3 @@ class Mutation(object):
     unfollow_user = mutations.UnfollowUser.Field(required=True)
     add_sports = mutations.AddSports.Field(required=True)
     remove_sports = mutations.RemoveSports.Field(required=True)
-
