@@ -25,4 +25,4 @@ class Query(object):
 
 class Mutation(object):
 
-    port_mutation = mutations.PostMutation.Field(required=True)
+    create_post = mutations.CreatePost.Field(required=True)

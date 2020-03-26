@@ -32,3 +32,7 @@ class UserFeedResponse(graphene.ObjectType):
 
 class MainFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
+
+
+class CreatePostReponse(graphene.ObjectType):
+    post = graphene.Field(PostType)
