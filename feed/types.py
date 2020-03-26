@@ -36,3 +36,15 @@ class MainFeedResponse(graphene.ObjectType):
 
 class CreatePostReponse(graphene.ObjectType):
     post = graphene.Field(PostType)
+
+
+class UpvotePostResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+
+
+class DownvotePostResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+
+
+class RemovePostInteractionResponse(graphene.ObjectType):
+    ok = graphene.Boolean()

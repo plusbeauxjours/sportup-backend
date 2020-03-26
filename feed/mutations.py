@@ -25,3 +25,100 @@ class CreatePost(graphene.Mutation):
         post = models.Post.objects.create(posted_by=user, text=text)
 
         return types.CreatePostReponse(post=post)
+
+
+class UpvotePost(graphene.Mutation):
+    class Arguments:
+        postId = graphene.Int()
+
+    Output = types.UpvotePostResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        postId = kwargs.get("postId")
+
+        post = models.Post.objects.get(pk=postId)
+
+        try:
+            upi = models.UserPostInteraction.objects.get(user=user, post=post)
+
+            if upi.interaction == "UV":
+                return types.UpvotePostResponse(ok=True)
+            if upi.interaction == "DV":
+                post.score += 1
+
+            upi.interaction = "UV"
+            upi.save()
+
+        except models.UserPostInteraction.DoesNotExist:
+            models.UserPostInteraction.objects.create(
+                user=user, post=post, interaction="UV"
+            )
+
+        post.score += 1
+        post.save()
+
+        return types.UpvotePostResponse(ok=True)
+
+
+class DownvotePost(graphene.Mutation):
+    class Arguments:
+        postId = graphene.Int()
+
+    Output = types.DownvotePostResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        postId = kwargs.get("postId")
+
+        post = models.Post.objects.get(pk=postId)
+
+        try:
+            upi = models.UserPostInteraction.objects.get(user=user, post=post)
+
+            if upi.interaction == "DV":
+                return types.DownvotePostResponse(ok=True)
+            if upi.interaction == "UV":
+                post.score -= 1
+
+            upi.interaction = "DV"
+            upi.save()
+
+        except models.UserPostInteraction.DoesNotExist:
+            models.UserPostInteraction.objects.create(
+                user=user, post=post, interaction="DV"
+            )
+
+        post.score -= 1
+        post.save()
+
+        return types.DownvotePostResponse(ok=True)
+
+
+class RemovePostInteraction(graphene.Mutation):
+    class Arguments:
+        postId = graphene.Int()
+
+    Output = types.RemovePostInteractionResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        postId = kwargs.get("postId")
+
+        post = models.Post.objects.get(pk=postId)
+
+        try:
+            upi = models.UserPostInteraction.objects.get(user=user, post=post)
+            if upi.interaction == "UV":
+                post.score -= 1
+            elif upi.interaction == "DV":
+                post.score += 1
+            upi.delete()
+            post.save()
+        except models.UserPostInteraction.DoesNotExist:
+            pass
+
+        return types.RemovePostInteractionResponse(ok=True)

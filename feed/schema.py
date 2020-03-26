@@ -26,3 +26,6 @@ class Query(object):
 class Mutation(object):
 
     create_post = mutations.CreatePost.Field(required=True)
+    upvote_post = mutations.UpvotePost.Field(required=True)
+    downvote_post = mutations.DownvotePost.Field(required=True)
+    remove_post_interaction = mutations.RemovePostInteraction.Field(required=True)

@@ -19,6 +19,9 @@ class Post(core_models.TimeStampedModel):
     class Meta:
         ordering = ["created_at"]
 
+    def __str__(self):
+        return self.text
+
 
 class UserPostInteraction(core_models.TimeStampedModel):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
