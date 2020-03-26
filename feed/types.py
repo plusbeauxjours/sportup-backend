@@ -18,13 +18,17 @@ class PostType(DjangoObjectType):
             return ""
 
 
-class PostQueryReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
-
-
 class PostMutationReponse(graphene.ObjectType):
     ok = graphene.Boolean()
 
 
 class MyFeedResponse(graphene.ObjectType):
-    feeds = graphene.List(PostType, page_num=graphene.Int())
+    posts = graphene.List(PostType, page_num=graphene.Int())
+
+
+class UserFeedResponse(graphene.ObjectType):
+    posts = graphene.List(PostType, page_num=graphene.Int())
+
+
+class MainFeedResponse(graphene.ObjectType):
+    posts = graphene.List(PostType, page_num=graphene.Int())

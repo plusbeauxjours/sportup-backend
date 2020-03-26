@@ -8,7 +8,7 @@ class PostAdmin(admin.ModelAdmin):
         "id",
         "score",
         "text",
-        "poster_by",
+        "posted_by",
     )
 
 
