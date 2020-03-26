@@ -1,5 +1,5 @@
 import graphene
-from . import types, queries, mutations
+from . import types, queries
 
 
 class Query(object):

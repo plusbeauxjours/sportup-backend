@@ -3,7 +3,9 @@ from core import models as core_models
 
 
 class Post(core_models.TimeStampedModel):
-    poster_by = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    poster_by = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="post"
+    )
     text = models.TextField(blank=True, null=True)
     post_img = models.ImageField(upload_to="post_imgs/", blank=True, null=True)
     score = models.IntegerField(default=0)

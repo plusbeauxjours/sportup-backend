@@ -3,9 +3,9 @@ from . import types, queries, mutations
 
 
 class Query(object):
-    port_query = graphene.Field(
-        types.PostQueryReponse,
-        resolver=queries.resolve_post_query,
+    my_feed = graphene.Field(
+        types.MyFeedResponse,
+        resolver=queries.resolve_my_feed,
         required=True,
         args={},
     )
