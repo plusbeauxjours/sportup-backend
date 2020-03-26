@@ -4,13 +4,14 @@ from . import models
 
 
 class SportType(DjangoObjectType):
+    sport_id = graphene.Int()
+
     class Meta:
         model = models.Sport
 
+    def resolve_sport_id(self, info):
+        return self.id
 
-class SportQueryReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
 
-
-class SportMutationReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
+class AllSportReponse(graphene.ObjectType):
+    sports = graphene.List(SportType)

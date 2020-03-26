@@ -3,14 +3,13 @@ from . import types, queries, mutations
 
 
 class Query(object):
-    sport_query = graphene.Field(
-        types.SportQueryReponse,
-        resolver=queries.resolve_sport_query,
+    all_sports = graphene.Field(
+        types.AllSportReponse,
+        resolver=queries.resolve_all_sports,
         required=True,
         args={},
     )
 
 
 class Mutation(object):
-
-    sport_mutation = mutations.SportMutation.Field(required=True)
+    pass

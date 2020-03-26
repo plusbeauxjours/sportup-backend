@@ -1,7 +1,8 @@
-from . import types
+from . import types, models
 from graphql_jwt.decorators import login_required
 
 
 @login_required
-def resolve_sport_query(self, info, **kwargs):
-    return types.SportQueryReponse(ok=True)
+def resolve_all_sports(self, info):
+    sports = models.Sport.objects.all()
+    return types.AllSportReponse(sports=sports)
