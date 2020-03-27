@@ -3,6 +3,7 @@ from . import types, models
 from sports import models as sport_models
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required
+from graphene_file_upload.scalars import Upload
 
 
 class CreateUser(graphene.Mutation):
@@ -107,3 +108,37 @@ class RemoveSports(graphene.Mutation):
         user.save()
 
         return types.RemoveSportsResponse(ok=True)
+
+
+class UpdateUser(graphene.Mutation):
+    class Arguments:
+        bio = graphene.String()
+        password = graphene.String()
+        first_name = graphene.String()
+        last_name = graphene.String()
+        profile_img = Upload()
+
+    Output = types.UpdateUserResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        bio = kwargs.get("bio")
+        first_name = kwargs.get("first_name")
+        last_name = kwargs.get("last_name")
+        password = kwargs.get("password")
+        profile_img = kwargs.get("profile_img")
+    
+        if first_name != "":
+            user.first_name = first_name
+
+        if last_name != "":
+            user.last_name = last_name
+
+        if password != "":
+            user.set_password(password)
+
+        user.profile.update_profile(bio=bio, profile_img=profile_img)
+        user.save()
+
+        return types.UpdateUserResponse(user=user)

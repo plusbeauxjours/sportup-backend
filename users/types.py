@@ -87,3 +87,7 @@ class AddSportsResponse(graphene.ObjectType):
 
 class RemoveSportsResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class UpdateUserResponse(graphene.ObjectType):
+    user = graphene.Field(UserType)

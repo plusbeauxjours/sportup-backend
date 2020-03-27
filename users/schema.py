@@ -19,3 +19,4 @@ class Mutation(object):
     unfollow_user = mutations.UnfollowUser.Field(required=True)
     add_sports = mutations.AddSports.Field(required=True)
     remove_sports = mutations.RemoveSports.Field(required=True)
+    update_user = mutations.UpdateUser.Field(required=True)
