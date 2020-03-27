@@ -49,7 +49,7 @@ class UserType(DjangoObjectType):
 
     def resolve_followers(self, info, **kwargs):
         page_num = kwargs.get("page_num", 1)
-        qs = models.User.objects.filter(profile__in=self.user.followers.all())
+        qs = models.User.objects.filter(id__in=self.user.followers.all())
         pg = Paginator(qs, 12)
         return pg.get_page(page_num)
 

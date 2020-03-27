@@ -124,11 +124,11 @@ class UpdateUser(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         bio = kwargs.get("bio")
-        first_name = kwargs.get("first_name")
-        last_name = kwargs.get("last_name")
-        password = kwargs.get("password")
-        profile_img = kwargs.get("profile_img")
-    
+        first_name = kwargs.get("first_name", "")
+        last_name = kwargs.get("last_name", "")
+        password = kwargs.get("password", "")
+        profile_img = kwargs.get("profile_img", None)
+
         if first_name != "":
             user.first_name = first_name
 
@@ -138,7 +138,12 @@ class UpdateUser(graphene.Mutation):
         if password != "":
             user.set_password(password)
 
-        user.profile.update_profile(bio=bio, profile_img=profile_img)
+        if bio is not None:
+            self.bio = bio
+
+        if profile_img is not None:
+            self.profile_img = profile_img
+
         user.save()
 
         return types.UpdateUserResponse(user=user)
