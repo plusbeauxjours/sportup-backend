@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser
 from core import models as core_models
+from sports import models as sport_models
 
 
 class User(AbstractUser):
@@ -33,6 +34,26 @@ class User(AbstractUser):
 
     def following_count(self):
         return self.following.all().count()
+
+    def get_sport_ids(self):
+        ups = UserPlaysSport.objects.filter(user=self)
+        return [obj.sport.id for obj in ups]
+
+    def add_sports(self, sport_ids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+        for sport in sports:
+            ups = UserPlaysSport.objects.create(user=self, sport=sport)
+
+    def remove_sports(self, sport_ids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+        UserPlaysSport.objects.filter(user=self, sport__in=sports).delete()
+
+    def has_sport(self, sport):
+        try:
+            ups = UserPlaysSport.objects.get(user=self, sport=sport)
+            return True
+        except models.ObjectDoesNotExist:
+            return False
 
 
 class UserPlaysSport(core_models.TimeStampedModel):

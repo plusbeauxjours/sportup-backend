@@ -84,9 +84,7 @@ class AddSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
-        for sport in sports:
-            ups = models.UserPlaysSport.objects.create(user=user, sport=sport)
+        user.profile.add_sports(sport_ids)
         user.save()
 
         return types.AddSportsResponse(ok=True)
@@ -103,8 +101,7 @@ class RemoveSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
-        models.UserPlaysSport.objects.filter(user=user, sport__in=sports).delete()
+        user.profile.remove_sports(sport_ids)
         user.save()
 
         return types.RemoveSportsResponse(ok=True)
@@ -147,3 +144,27 @@ class UpdateUser(graphene.Mutation):
         user.save()
 
         return types.UpdateUserResponse(user=user)
+
+
+class UpdateSports(graphene.Mutation):
+    class Arguments:
+        sport_ids = graphene.List(graphene.Int, required=True)
+
+    Output = types.UpdateSportsResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        sport_ids = kwargs.get("sport_ids")
+
+        ups = models.UserPlaysSport.objects.filter(user=user)
+        user_sport_ids = [obj.sport.id for obj in ups]
+
+        to_add = [s_id for s_id in sport_ids if s_id not in user_sport_ids]
+        to_remove = [s_id for s_id in user_sport_ids if s_id not in sport_ids]
+
+        user.add_sports(to_add)
+        user.remove_sports(to_remove)
+        user.save()
+
+        return types.UpdateSportsResponse(user=user)

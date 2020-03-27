@@ -20,3 +20,4 @@ class Mutation(object):
     add_sports = mutations.AddSports.Field(required=True)
     remove_sports = mutations.RemoveSports.Field(required=True)
     update_user = mutations.UpdateUser.Field(required=True)
+    update_sports = mutations.UpdateSports.Field(required=True)
