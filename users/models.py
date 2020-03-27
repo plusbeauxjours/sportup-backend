@@ -55,6 +55,20 @@ class User(AbstractUser):
         except models.ObjectDoesNotExist:
             return False
 
+    def rate_user_sport(self, uuid, sport_id, rating):
+        sport = sport_models.Sport.objects.get(pk=sport_id)
+        user = User.objects.get(uuid=uuid)
+        ups = UserPlaysSport.objects.get(user=user, sport=sport)
+
+        try:
+            urus = UserRatesSport.objects.get(rater=user, rated_user_sport=ups)
+            urus.rating = rating
+            urus.save()
+        except UserRatesSport.DoesNotExist:
+            urus = UserRatesSport.objects.create(
+                rater=user, rated_user_sport=ups, rating=rating
+            )
+
 
 class UserPlaysSport(core_models.TimeStampedModel):
     user = models.ForeignKey(

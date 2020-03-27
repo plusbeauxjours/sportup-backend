@@ -168,3 +168,24 @@ class UpdateSports(graphene.Mutation):
         user.save()
 
         return types.UpdateSportsResponse(user=user)
+
+
+class RateUserSport(graphene.Mutation):
+    class Arguments:
+        uuid = graphene.String(required=True)
+        sport_id = graphene.Int(required=True)
+        rating = graphene.Int(required=True)
+
+    Output = types.RateUserSportResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        uuid = kwargs.get("uuid")
+        sport_id = kwargs.get("sport_id")
+        rating = kwargs.get("rating")
+
+        user.rate_user_sport(uuid, sport_id, rating)
+        user.save()
+
+        return types.RateUserSportResponse(ok=True)
