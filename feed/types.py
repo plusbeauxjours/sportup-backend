@@ -1,12 +1,16 @@
 import graphene
+from graphene import relay
 from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import login_required
 from . import models
 
 
 class PostType(DjangoObjectType):
+    interaction = graphene.String()
+
     class Meta:
         model = models.Post
+        interfaces = (relay.Node,)
 
     @login_required
     def resolve_interaction(self, info):
@@ -14,7 +18,7 @@ class PostType(DjangoObjectType):
         try:
             upi = models.UserPostInteraction.objects.get(post=self, user=user)
             return upi.interaction
-        except models.UserPostInteraction.ObjectDoesNotExist:
+        except models.UserPostInteraction.DoesNotExist:
             return ""
 
 

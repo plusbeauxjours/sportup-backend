@@ -1,1 +1,1 @@
-# Sport MeetUp Application with Django, React-Native, Graphene, Apollo
+# Sport MeetUp Application Backend with Django, Graphene

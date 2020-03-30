@@ -52,7 +52,7 @@ class User(AbstractUser):
         try:
             ups = UserPlaysSport.objects.get(user=self, sport=sport)
             return True
-        except models.ObjectDoesNotExist:
+        except UserPlaysSport.DoesNotExist:
             return False
 
     def rate_user_sport(self, uuid, sport_id, rating):

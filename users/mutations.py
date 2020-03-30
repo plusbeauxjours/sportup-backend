@@ -84,7 +84,7 @@ class AddSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        user.profile.add_sports(sport_ids)
+        user.add_sports(sport_ids)
         user.save()
 
         return types.AddSportsResponse(ok=True)
@@ -101,7 +101,7 @@ class RemoveSports(graphene.Mutation):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
 
-        user.profile.remove_sports(sport_ids)
+        user.remove_sports(sport_ids)
         user.save()
 
         return types.RemoveSportsResponse(ok=True)
@@ -113,7 +113,7 @@ class UpdateUser(graphene.Mutation):
         password = graphene.String()
         first_name = graphene.String()
         last_name = graphene.String()
-        profile_img = Upload()
+        user_img = Upload()
 
     Output = types.UpdateUserResponse
 
@@ -124,7 +124,7 @@ class UpdateUser(graphene.Mutation):
         first_name = kwargs.get("first_name", "")
         last_name = kwargs.get("last_name", "")
         password = kwargs.get("password", "")
-        profile_img = kwargs.get("profile_img", None)
+        user_img = kwargs.get("user_img", None)
 
         if first_name != "":
             user.first_name = first_name
@@ -138,8 +138,8 @@ class UpdateUser(graphene.Mutation):
         if bio is not None:
             self.bio = bio
 
-        if profile_img is not None:
-            self.profile_img = profile_img
+        if user_img is not None:
+            self.user_img = user_img
 
         user.save()
 

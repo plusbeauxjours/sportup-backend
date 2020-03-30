@@ -25,10 +25,12 @@ class FollowType(DjangoObjectType):
 
 
 class UserType(DjangoObjectType):
+    name = graphene.String()
     is_following = graphene.Boolean()
     sports = graphene.List(UserPlaysSportType)
     followers = graphene.List(FollowType, page_num=graphene.Int())
     following = graphene.List(FollowType, page_num=graphene.Int())
+    teams_count = graphene.Int()
     followers_count = graphene.Int(source="followers_count")
     following_count = graphene.Int(source="following_count")
 
@@ -58,6 +60,12 @@ class UserType(DjangoObjectType):
         qs = self.following.all()
         pg = Paginator(qs, 12)
         return pg.get_page(page_num)
+
+    def resolve_teams_count(self, info):
+        return self.team_set.count()
+
+    def resolve_name(self, info):
+        return self.get_full_name()
 
 
 class MeReponse(graphene.ObjectType):
@@ -99,3 +107,7 @@ class UpdateSportsResponse(graphene.ObjectType):
 
 class RateUserSportResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class UsersForGamesResponse(graphene.ObjectType):
+    users = graphene.List(UserType)

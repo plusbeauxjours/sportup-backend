@@ -10,6 +10,12 @@ class Query(object):
         required=True,
         args={"uuid": graphene.String(required=True),},
     )
+    get_users_for_games = graphene.Field(
+        types.UsersForGamesResponse,
+        resolver=queries.resolve_users_for_games,
+        required=True,
+        args={"sport_ids": graphene.List(graphene.Int, required=True),},
+    )
 
 
 class Mutation(object):
