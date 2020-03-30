@@ -111,3 +111,7 @@ class RateUserSportResponse(graphene.ObjectType):
 
 class UsersForGamesResponse(graphene.ObjectType):
     users = graphene.List(UserType)
+
+
+class SearchUsersResponse(graphene.ObjectType):
+    users = graphene.List(UserType)

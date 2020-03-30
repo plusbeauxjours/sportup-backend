@@ -16,6 +16,12 @@ class Query(object):
         required=True,
         args={"sport_ids": graphene.List(graphene.Int, required=True),},
     )
+    search_users = graphene.Field(
+        types.SearchUsersResponse,
+        resolver=queries.resolve_search_users,
+        required=True,
+        args={"search_text": graphene.String(required=True),},
+    )
 
 
 class Mutation(object):
