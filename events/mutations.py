@@ -95,3 +95,51 @@ class RegisterTeam(graphene.Mutation):
 
         except models.Event.DoesNotExist:
             return types.RegisterTeamResponse(ok=False)
+
+
+class ApproveRegistration(graphene.Mutation):
+    class Arguments:
+        registration_id = graphene.Int(required=True)
+
+    Output = types.ApproveRegistrationResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        registration_id = kwargs.get("registration_id")
+
+        try:
+            registration = models.Registration.objects.get(pk=registration_id)
+            if registration.event.owner != user:
+                raise Exception("Not authorized to edit event!")
+
+            registration.approved = True
+            registration.save()
+            return types.ApproveRegistrationResponse(ok=True)
+
+        except models.Registration.DoesNotExist:
+            return types.ApproveRegistrationResponse(ok=False)
+
+
+class DisapproveRegistration(graphene.Mutation):
+    class Arguments:
+        registration_id = graphene.Int(required=True)
+
+    Output = types.DisapproveRegistrationResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        registration_id = kwargs.get("registration_id")
+
+        try:
+            registration = models.Registration.objects.get(pk=registration_id)
+            if registration.event.owner != user:
+                raise Exception("Not authorized to edit event!")
+
+            registration.approved = False
+            registration.save()
+            return types.DisapproveRegistrationResponse(ok=True)
+
+        except models.Registration.DoesNotExist:
+            return types.DisapproveRegistrationResponse(ok=False)

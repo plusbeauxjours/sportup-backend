@@ -36,3 +36,11 @@ class CreateEventReponse(graphene.ObjectType):
 
 class RegisterTeamResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class ApproveRegistrationResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+
+
+class DisapproveRegistrationResponse(graphene.ObjectType):
+    ok = graphene.Boolean()

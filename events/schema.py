@@ -14,3 +14,5 @@ class Query(object):
 class Mutation(object):
     create_event = mutations.CreateEvent.Field(required=True)
     register_team = mutations.RegisterTeam.Field(required=True)
+    approve_registration = mutations.ApproveRegistration.Field(required=True)
+    disapprove_registration = mutations.DisapproveRegistration.Field(required=True)
