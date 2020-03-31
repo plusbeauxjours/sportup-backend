@@ -13,3 +13,4 @@ class Query(object):
 
 class Mutation(object):
     create_event = mutations.CreateEvent.Field(required=True)
+    register_team = mutations.RegisterTeam.Field(required=True)

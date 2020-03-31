@@ -1,5 +1,6 @@
 import graphene
 from . import types, models
+from graphql_jwt.decorators import login_required
 from sports import models as sport_models
 
 
@@ -51,3 +52,46 @@ class CreateEvent(graphene.Mutation):
 
         except sport_models.Sport.DoesNotExist:
             return types.CreateEventReponse(event=None)
+
+
+class RegisterTeam(graphene.Mutation):
+    class Arguments:
+        event_id = graphene.Int(required=True)
+        team_name = graphene.String(required=True)
+        captain_name = graphene.String(required=True)
+        captain_cnic = graphene.String(required=True)
+        captain_contact = graphene.String(required=True)
+        player_names = graphene.List(graphene.String)
+
+    Output = types.RegisterTeamResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        event_id = kwargs.get("event_id")
+        team_name = kwargs.get("team_name")
+        captain_name = kwargs.get("captain_name")
+        captain_cnic = kwargs.get("captain_cnic")
+        captain_contact = kwargs.get("captain_contact")
+        player_names = kwargs.get("player_names")
+
+        try:
+            event = models.Event.objects.get(pk=event_id)
+            registration = models.Registration.objects.create(
+                name=team_name,
+                event=event,
+                registered_by=user,
+                captain_name=captain_name,
+                captain_cnic=captain_cnic,
+                captain_contact_num=captain_contact,
+            )
+
+            for name in player_names:
+                models.RegisteredPlayer.objects.create(
+                    name=name, registration=registration
+                )
+
+            return types.RegisterTeamResponse(ok=True)
+
+        except models.Event.DoesNotExist:
+            return types.RegisterTeamResponse(ok=False)

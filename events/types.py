@@ -32,3 +32,7 @@ class EventQueryReponse(graphene.ObjectType):
 
 class CreateEventReponse(graphene.ObjectType):
     event = graphene.Field(EventType)
+
+
+class RegisterTeamResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
