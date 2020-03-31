@@ -17,7 +17,7 @@ class CreateEvent(graphene.Mutation):
         maximum_members = graphene.Int(required=True)
         expected_teams = graphene.Int()
 
-    Output = types.CreateEventReponse
+    Output = types.CreateEventResponse
 
     def mutate(self, info, **kwargs):
         user = info.context.user
@@ -48,10 +48,10 @@ class CreateEvent(graphene.Mutation):
                 expected_teams=expected_teams,
             )
 
-            return types.CreateEventReponse(event=event)
+            return types.CreateEventResponse(event=event)
 
         except sport_models.Sport.DoesNotExist:
-            return types.CreateEventReponse(event=None)
+            return types.CreateEventResponse(event=None)
 
 
 class RegisterTeam(graphene.Mutation):

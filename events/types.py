@@ -26,11 +26,15 @@ class RegisteredPlayerType(DjangoObjectType):
         model = models.RegisteredPlayer
 
 
-class EventQueryReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
+class GetEventResponse(graphene.ObjectType):
+    event = graphene.Field(EventType)
 
 
-class CreateEventReponse(graphene.ObjectType):
+class GetRegistrationResponse(graphene.ObjectType):
+    registration = graphene.List(RegistrationType)
+
+
+class CreateEventResponse(graphene.ObjectType):
     event = graphene.Field(EventType)
 
 
@@ -44,3 +48,5 @@ class ApproveRegistrationResponse(graphene.ObjectType):
 
 class DisapproveRegistrationResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+

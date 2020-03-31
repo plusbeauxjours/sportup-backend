@@ -3,11 +3,17 @@ from . import types, queries, mutations
 
 
 class Query(object):
-    event_query = graphene.Field(
-        types.EventQueryReponse,
-        resolver=queries.resolve_event_query,
+    get_event = graphene.Field(
+        types.GetEventResponse,
+        resolver=queries.resolve_get_event,
         required=True,
-        args={},
+        args={"event_id": graphene.Int(required=True)},
+    )
+    get_registration = graphene.Field(
+        types.GetRegistrationResponse,
+        resolver=queries.resolve_get_registrations,
+        required=True,
+        args={"event_id": graphene.Int(required=True)},
     )
 
 
