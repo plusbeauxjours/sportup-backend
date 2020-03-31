@@ -12,5 +12,4 @@ class Query(object):
 
 
 class Mutation(object):
-
-    event_mutation = mutations.EventMutation.Field(required=True)
+    create_event = mutations.CreateEvent.Field(required=True)

@@ -38,28 +38,32 @@ class UpvotePost(graphene.Mutation):
         user = info.context.user
         postId = kwargs.get("postId")
 
-        post = models.Post.objects.get(pk=postId)
-
         try:
-            upi = models.UserPostInteraction.objects.get(user=user, post=post)
+            post = models.Post.objects.get(pk=postId)
 
-            if upi.interaction == "UV":
-                return types.UpvotePostResponse(ok=True)
-            if upi.interaction == "DV":
-                post.score += 1
+            try:
+                upi = models.UserPostInteraction.objects.get(user=user, post=post)
 
-            upi.interaction = "UV"
-            upi.save()
+                if upi.interaction == "UV":
+                    return types.UpvotePostResponse(ok=True)
+                if upi.interaction == "DV":
+                    post.score += 1
 
-        except models.UserPostInteraction.DoesNotExist:
-            models.UserPostInteraction.objects.create(
-                user=user, post=post, interaction="UV"
-            )
+                upi.interaction = "UV"
+                upi.save()
 
-        post.score += 1
-        post.save()
+            except models.UserPostInteraction.DoesNotExist:
+                models.UserPostInteraction.objects.create(
+                    user=user, post=post, interaction="UV"
+                )
 
-        return types.UpvotePostResponse(ok=True)
+            post.score += 1
+            post.save()
+
+            return types.UpvotePostResponse(ok=True)
+
+        except models.Post.DoesNotExist:
+            return types.UpvotePostResponse(ok=False)
 
 
 class DownvotePost(graphene.Mutation):
@@ -73,28 +77,32 @@ class DownvotePost(graphene.Mutation):
         user = info.context.user
         postId = kwargs.get("postId")
 
-        post = models.Post.objects.get(pk=postId)
-
         try:
-            upi = models.UserPostInteraction.objects.get(user=user, post=post)
+            post = models.Post.objects.get(pk=postId)
 
-            if upi.interaction == "DV":
-                return types.DownvotePostResponse(ok=True)
-            if upi.interaction == "UV":
-                post.score -= 1
+            try:
+                upi = models.UserPostInteraction.objects.get(user=user, post=post)
 
-            upi.interaction = "DV"
-            upi.save()
+                if upi.interaction == "DV":
+                    return types.DownvotePostResponse(ok=True)
+                if upi.interaction == "UV":
+                    post.score -= 1
 
-        except models.UserPostInteraction.DoesNotExist:
-            models.UserPostInteraction.objects.create(
-                user=user, post=post, interaction="DV"
-            )
+                upi.interaction = "DV"
+                upi.save()
 
-        post.score -= 1
-        post.save()
+            except models.UserPostInteraction.DoesNotExist:
+                models.UserPostInteraction.objects.create(
+                    user=user, post=post, interaction="DV"
+                )
 
-        return types.DownvotePostResponse(ok=True)
+            post.score -= 1
+            post.save()
+
+            return types.DownvotePostResponse(ok=True)
+
+        except models.Post.DoesNotExist:
+            return types.UpvotePostResponse(ok=False)
 
 
 class RemovePostInteraction(graphene.Mutation):
@@ -108,17 +116,22 @@ class RemovePostInteraction(graphene.Mutation):
         user = info.context.user
         postId = kwargs.get("postId")
 
-        post = models.Post.objects.get(pk=postId)
-
         try:
-            upi = models.UserPostInteraction.objects.get(user=user, post=post)
-            if upi.interaction == "UV":
-                post.score -= 1
-            elif upi.interaction == "DV":
-                post.score += 1
-            upi.delete()
-            post.save()
-        except models.UserPostInteraction.DoesNotExist:
-            pass
+            post = models.Post.objects.get(pk=postId)
 
-        return types.RemovePostInteractionResponse(ok=True)
+            try:
+                upi = models.UserPostInteraction.objects.get(user=user, post=post)
+                if upi.interaction == "UV":
+                    post.score -= 1
+                elif upi.interaction == "DV":
+                    post.score += 1
+                upi.delete()
+                post.save()
+            except models.UserPostInteraction.DoesNotExist:
+                pass
+
+            return types.RemovePostInteractionResponse(ok=True)
+
+        except models.Post.DoesNotExist:
+            return types.UpvotePostResponse(ok=False)
+

@@ -27,16 +27,21 @@ def resolve_user_feed(self, info, **kwargs):
 
     uuid = kwargs.get("uuid")
     page_num = kwargs.get("page_num", 1)
-    user = user_models.User.objects.get(uuid=uuid)
 
-    posts = user.post.all()
-    pg = Paginator(posts, 2)
+    try:
+        user = user_models.User.objects.get(uuid=uuid)
 
-    if page_num > pg.num_pages:
-        return None
+        posts = user.post.all()
+        pg = Paginator(posts, 2)
 
-    posts = pg.get_page(page_num)
-    return types.UserFeedResponse(posts=posts)
+        if page_num > pg.num_pages:
+            return None
+
+        posts = pg.get_page(page_num)
+        return types.UserFeedResponse(posts=posts)
+
+    except models.Event.DoesNotExist:
+        return types.UserFeedResponse(posts=None)
 
 
 @login_required
