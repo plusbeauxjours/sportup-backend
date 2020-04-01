@@ -50,3 +50,9 @@ class DisapproveRegistrationResponse(graphene.ObjectType):
     ok = graphene.Boolean()
 
 
+class SearchEventsResponse(graphene.ObjectType):
+    events = graphene.List(EventType)
+
+
+class UpcomingEventsResponse(graphene.ObjectType):
+    events = graphene.List(EventType)

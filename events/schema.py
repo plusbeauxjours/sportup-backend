@@ -11,9 +11,21 @@ class Query(object):
     )
     get_registration = graphene.Field(
         types.GetRegistrationResponse,
-        resolver=queries.resolve_get_registrations,
+        resolver=queries.resolve_get_registration,
         required=True,
         args={"event_id": graphene.Int(required=True)},
+    )
+    search_events = graphene.Field(
+        types.SearchEventsResponse,
+        resolver=queries.resolve_search_events,
+        required=True,
+        args={"search_text": graphene.String(required=True)},
+    )
+    upcoming_events = graphene.Field(
+        types.UpcomingEventsResponse,
+        resolver=queries.resolve_upcoming_events,
+        required=True,
+        args={},
     )
 
 
