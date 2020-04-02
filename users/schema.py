@@ -11,21 +11,20 @@ class Query(object):
         args={"uuid": graphene.String(required=True),},
     )
     get_users_for_games = graphene.Field(
-        types.UsersForGamesResponse,
-        resolver=queries.resolve_users_for_games,
+        types.GetUsersForGamesResponse,
+        resolver=queries.resolve_get_users_for_games,
         required=True,
         args={"sport_ids": graphene.List(graphene.Int, required=True),},
     )
-    search_users = graphene.Field(
-        types.SearchUsersResponse,
-        resolver=queries.resolve_search_users,
+    get_search_users = graphene.Field(
+        types.GetSearchUsersResponse,
+        resolver=queries.resolve_get_search_users,
         required=True,
         args={"search_text": graphene.String(required=True),},
     )
 
 
 class Mutation(object):
-
     create_user = mutations.CreateUser.Field(required=True)
     follow_user = mutations.FollowUser.Field(required=True)
     unfollow_user = mutations.UnfollowUser.Field(required=True)

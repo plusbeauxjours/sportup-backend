@@ -22,19 +22,15 @@ class PostType(DjangoObjectType):
             return ""
 
 
-class PostMutationReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
-
-
-class MyFeedResponse(graphene.ObjectType):
+class GetMyFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
 
 
-class UserFeedResponse(graphene.ObjectType):
+class GetUserFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
 
 
-class MainFeedResponse(graphene.ObjectType):
+class GetMainFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
 
 

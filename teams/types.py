@@ -17,8 +17,12 @@ class TeamType(DjangoObjectType):
         return user.profile.is_team_admin(team=self)
 
 
-class TeamQueryReponse(graphene.ObjectType):
-    ok = graphene.Boolean()
+class GetTeamResponse(graphene.ObjectType):
+    team = graphene.Field(TeamType)
+
+
+class GetTeamsForGameResponse(graphene.ObjectType):
+    teams = graphene.List(TeamType)
 
 
 class CreateTeamResponse(graphene.ObjectType):
@@ -35,3 +39,7 @@ class RemoveTeamMemberResponse(graphene.ObjectType):
 
 class UpdateTeamResponse(graphene.ObjectType):
     team = graphene.Field(TeamType)
+
+
+class RatesTeamResponse(graphene.ObjectType):
+    ok = graphene.Boolean()

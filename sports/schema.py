@@ -3,9 +3,9 @@ from . import types, queries
 
 
 class Query(object):
-    all_sports = graphene.Field(
-        types.AllSportReponse,
-        resolver=queries.resolve_all_sports,
+    get_all_sports = graphene.Field(
+        types.GetAllSportReponse,
+        resolver=queries.resolve_get_all_sports,
         required=True,
         args={},
     )

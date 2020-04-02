@@ -3,11 +3,17 @@ from . import types, queries, mutations
 
 
 class Query(object):
-    team_query = graphene.Field(
-        types.TeamQueryReponse,
-        resolver=queries.resolve_team_query,
+    get_team = graphene.Field(
+        types.GetTeamResponse,
+        resolver=queries.resolve_get_team,
         required=True,
-        args={},
+        args={"id": graphene.Int()},
+    )
+    get_teams_for_game = graphene.Field(
+        types.GetTeamsForGameResponse,
+        resolver=queries.resolve_get_teams_for_game,
+        required=True,
+        args={"sport_ids": graphene.List(graphene.Int)},
     )
 
 
@@ -16,3 +22,4 @@ class Mutation(object):
     add_team_member = mutations.AddTeamMember.Field(required=True)
     remove_team_member = mutations.RemoveTeamMember.Field(required=True)
     update_team = mutations.UpdateTeam.Field(required=True)
+    rate_team = mutations.RateTeam.Field(required=True)

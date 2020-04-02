@@ -3,28 +3,27 @@ from . import types, queries, mutations
 
 
 class Query(object):
-    my_feed = graphene.Field(
-        types.MyFeedResponse,
-        resolver=queries.resolve_my_feed,
+    get_my_feed = graphene.Field(
+        types.GetMyFeedResponse,
+        resolver=queries.resolve_get_my_feed,
         required=True,
         args={"page_num": graphene.Int()},
     )
-    user_feed = graphene.Field(
-        types.UserFeedResponse,
-        resolver=queries.resolve_user_feed,
+    get_user_feed = graphene.Field(
+        types.GetUserFeedResponse,
+        resolver=queries.resolve_get_user_feed,
         required=True,
         args={"uuid": graphene.String(required=True), "page_num": graphene.Int()},
     )
-    main_feed = graphene.Field(
-        types.MainFeedResponse,
-        resolver=queries.resolve_main_feed,
+    get_main_feed = graphene.Field(
+        types.GetMainFeedResponse,
+        resolver=queries.resolve_get_main_feed,
         required=True,
         args={"page_num": graphene.Int()},
     )
 
 
 class Mutation(object):
-
     create_post = mutations.CreatePost.Field(required=True)
     upvote_post = mutations.UpvotePost.Field(required=True)
     downvote_post = mutations.DownvotePost.Field(required=True)

@@ -13,5 +13,5 @@ class SportType(DjangoObjectType):
         return self.id
 
 
-class AllSportReponse(graphene.ObjectType):
+class GetAllSportReponse(graphene.ObjectType):
     sports = graphene.List(SportType)

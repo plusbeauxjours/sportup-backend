@@ -76,6 +76,14 @@ class GetUserReponse(graphene.ObjectType):
     user = graphene.Field(UserType)
 
 
+class GetUsersForGamesResponse(graphene.ObjectType):
+    users = graphene.List(UserType)
+
+
+class GetSearchUsersResponse(graphene.ObjectType):
+    users = graphene.List(UserType)
+
+
 class CreateUserReponse(graphene.ObjectType):
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
@@ -107,11 +115,3 @@ class UpdateSportsResponse(graphene.ObjectType):
 
 class RateUserSportResponse(graphene.ObjectType):
     ok = graphene.Boolean()
-
-
-class UsersForGamesResponse(graphene.ObjectType):
-    users = graphene.List(UserType)
-
-
-class SearchUsersResponse(graphene.ObjectType):
-    users = graphene.List(UserType)

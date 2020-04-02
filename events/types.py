@@ -34,6 +34,14 @@ class GetRegistrationResponse(graphene.ObjectType):
     registration = graphene.List(RegistrationType)
 
 
+class GetSearchEventsResponse(graphene.ObjectType):
+    events = graphene.List(EventType)
+
+
+class GetUpcomingEventsResponse(graphene.ObjectType):
+    events = graphene.List(EventType)
+
+
 class CreateEventResponse(graphene.ObjectType):
     event = graphene.Field(EventType)
 
@@ -48,11 +56,3 @@ class ApproveRegistrationResponse(graphene.ObjectType):
 
 class DisapproveRegistrationResponse(graphene.ObjectType):
     ok = graphene.Boolean()
-
-
-class SearchEventsResponse(graphene.ObjectType):
-    events = graphene.List(EventType)
-
-
-class UpcomingEventsResponse(graphene.ObjectType):
-    events = graphene.List(EventType)

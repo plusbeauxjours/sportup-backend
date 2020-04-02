@@ -141,3 +141,32 @@ class UpdateTeam(graphene.Mutation):
 
         except models.Team.DoesNotExist:
             return types.UpdateTeamResponse(team=None)
+
+
+class RateTeam(graphene.Mutation):
+    class Arguments:
+        team_id = graphene.Int(required=True)
+        rating = graphene.Int(required=True)
+
+    Output = types.RatesTeamResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        team_id = kwargs.get("team_id")
+        rating = kwargs.get("rating")
+
+        team = models.Team.objects.get(pk=team_id)
+
+        try:
+            urt = models.UserRatesTeam.objects.get(user=user, team=team)
+            urt.rating = rating
+            urt.save()
+            return types.RatesTeamResponse(ok=True)
+
+        except models.UserRatesTeam.DoesNotExist:
+            new_urt = models.UserRatesTeam.objects.create(
+                user=user, team=team, rating=rating
+            )
+            return types.RatesTeamResponse(ok=True)
+

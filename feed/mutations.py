@@ -3,14 +3,6 @@ from . import types, models
 from graphql_jwt.decorators import login_required
 
 
-class PostMutation(graphene.Mutation):
-
-    Output = types.PostMutationReponse
-
-    def mutate(self, info, **kwargs):
-        return types.PostMutationReponse(ok=True)
-
-
 class CreatePost(graphene.Mutation):
     class Arguments:
         text = graphene.String(required=True)

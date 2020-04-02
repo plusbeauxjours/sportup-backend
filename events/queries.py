@@ -25,15 +25,15 @@ def resolve_get_registration(self, info, **kwargs):
     return types.GetRegistrationResponse(registration=registration)
 
 
-def resolve_search_events(self, info, **kwargs):
+def resolve_get_search_events(self, info, **kwargs):
     search_text = kwargs.get("search_text", "")
 
     events = models.Event.objects.filter(name__icontains=search_text)[:3]
-    return types.SearchEventsResponse(events=events)
+    return types.GetSearchEventsResponse(events=events)
 
 
-def resolve_upcoming_events(self, info):
+def resolve_get_upcoming_events(self, info):
     today = datetime.datetime.today()
 
     events = models.Event.objects.filter(Q(start_date__gte=today) | Q(start_date=None))
-    return types.UpcomingEventsResponse(events=events)
+    return types.GetUpcomingEventsResponse(events=events)
