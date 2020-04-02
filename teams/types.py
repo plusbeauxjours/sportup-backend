@@ -29,5 +29,9 @@ class AddTeamMemberResponse(graphene.ObjectType):
     ok = graphene.Boolean()
 
 
-class RemoveTeamResponse(graphene.ObjectType):
+class RemoveTeamMemberResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class UpdateTeamResponse(graphene.ObjectType):
+    team = graphene.Field(TeamType)

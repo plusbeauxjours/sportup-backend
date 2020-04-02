@@ -53,7 +53,6 @@ class AddTeamMember(graphene.Mutation):
 
         try:
             team = models.Team.objects.get(pk=team_id)
-            print("team", team)
             if not user.is_team_admin(team=team):
                 raise Exception("Not authorized to edit team.")
 
@@ -71,13 +70,74 @@ class AddTeamMember(graphene.Mutation):
             return types.AddTeamMemberResponse(ok=False)
 
 
-# class RemoveTeamMember(graphene.Mutation):
-#     class Arguments:
-#         team_id = graphene.Int()
-#         uuid = graphene.String()
+class RemoveTeamMember(graphene.Mutation):
+    class Arguments:
+        team_id = graphene.Int()
+        uuid = graphene.String()
 
-#     @login_required
-#     def mutate(self, info, team_id, user_id):
-#         user = info.context.user
+    Output = types.RemoveTeamMemberResponse
 
-#         team = models.Team
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        team_id = kwargs.get("team_id")
+        uuid = kwargs.get("uuid")
+
+        try:
+            team = models.Team.objects.get(pk=team_id)
+            if not user.is_team_admin(team=team):
+                raise Exception("Not authorized to edit team.")
+
+            try:
+                user_to_remove = user_models.User.objects.get(uuid=uuid)
+                tm = models.TeamMember.objects.get(user=user_to_remove, team=team)
+                tm.delete()
+                return types.RemoveTeamMemberResponse(ok=True)
+
+            except user_models.User.DoesNotExist:
+                return types.RemoveTeamMemberResponse(ok=False)
+
+        except models.Team.DoesNotExist:
+            return types.RemoveTeamMemberResponse(ok=False)
+
+
+class UpdateTeam(graphene.Mutation):
+    class Arguments:
+        team_id = graphene.Int()
+        name = graphene.String()
+        sport_id = graphene.Int()
+        member_uuids = graphene.List(graphene.String)
+
+    Output = types.UpdateTeamResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+        user = info.context.user
+        team_id = kwargs.get("team_id")
+        name = kwargs.get("name", None)
+        sport_id = kwargs.get("sport_id", None)
+        member_uuids = kwargs.get("member_uuids", [])
+
+        try:
+            team = models.Team.objects.get(pk=team_id)
+            if not user.is_team_admin(team=team):
+                raise Exception("Not authorized to edit team.")
+
+            team.update_profile(name=name, sport_id=sport_id)
+            team_member_uuids = team.get_member_uuids()
+            to_add = [
+                m_uuid for m_uuid in member_uuids if m_uuid not in team_member_uuids
+            ]
+            to_remove = [
+                m_uuid for m_uuid in team_member_uuids if m_uuid not in member_uuids
+            ]
+            print("to_add", to_add)
+            print("to_remove", to_remove)
+
+            team.add_members(to_add)
+            team.remove_members(to_remove)
+            team.save()
+            return types.UpdateTeamResponse(team=team)
+
+        except models.Team.DoesNotExist:
+            return types.UpdateTeamResponse(team=None)

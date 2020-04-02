@@ -1,4 +1,6 @@
 from django.db import models
+from users import models as user_models
+from sports import models as sport_models
 from core import models as core_models
 
 
@@ -18,6 +20,28 @@ class Team(core_models.TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def update_profile(self, name, sport_id):
+        self.name = name
+        if sport_id is not None:
+            sport = sport_models.Sport.objects.get(pk=sport_id)
+            self.sport = sport
+
+    def get_member_uuids(self):
+        tms = TeamMember.objects.filter(team=self)
+        print("get_member_uuids", tms)
+        return [tm.user.uuid for tm in tms]
+
+    def add_members(self, member_uuids):
+        members = user_models.User.objects.filter(uuid__in=member_uuids)
+        print("add_members", members)
+        for member in members:
+            tm = TeamMember.objects.create(team=self, user=member)
+
+    def remove_members(self, member_uuids):
+        members = user_models.User.objects.filter(uuid__in=member_uuids)
+        print("remove_members", members)
+        TeamMember.objects.filter(team=self, user__in=members).delete()
 
 
 class TeamMember(core_models.TimeStampedModel):
