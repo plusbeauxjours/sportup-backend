@@ -134,4 +134,3 @@ class RemovePostInteraction(graphene.Mutation):
 
         except models.Post.DoesNotExist:
             return types.UpvotePostResponse(ok=False)
-

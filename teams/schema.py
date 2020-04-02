@@ -12,5 +12,6 @@ class Query(object):
 
 
 class Mutation(object):
-
-    team_mutation = mutations.TeamMutation.Field(required=True)
+    create_team = mutations.CreateTeam.Field(required=True)
+    add_team = mutations.AddTeamMember.Field(required=True)
+    # remove_team = mutations.RemoveTeam.Field(required=True)

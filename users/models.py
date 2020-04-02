@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from core import models as core_models
 from sports import models as sport_models
+from teams import models as team_models
 
 
 class User(AbstractUser):
@@ -68,6 +69,15 @@ class User(AbstractUser):
             urus = UserRatesSport.objects.create(
                 rater=user, rated_user_sport=ups, rating=rating
             )
+
+    def is_team_admin(self, team):
+        try:
+            tm = team_models.TeamMember.objects.get(user=self, team=team)
+            print("tm", tm)
+            return tm.is_admin
+        except team_models.TeamMember.DoesNotExist:
+            print("tmx")
+            return False
 
 
 class UserPlaysSport(core_models.TimeStampedModel):
