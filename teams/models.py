@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from users import models as user_models
 from sports import models as sport_models
@@ -5,6 +6,9 @@ from core import models as core_models
 
 
 class Team(core_models.TimeStampedModel):
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
+    )
     name = models.CharField(max_length=50)
     rating = models.FloatField(blank=True, null=True)
     cover_img = models.ImageField(upload_to="team_cover_imgs/", blank=True, null=True)
@@ -21,26 +25,23 @@ class Team(core_models.TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def update_profile(self, name, sport_id):
+    def update_profile(self, name, sport_uuid):
         self.name = name
-        if sport_id is not None:
-            sport = sport_models.Sport.objects.get(pk=sport_id)
+        if sport_uuid is not None:
+            sport = sport_models.Sport.objects.get(uuid=sport_uuid)
             self.sport = sport
 
     def get_member_uuids(self):
         tms = TeamMember.objects.filter(team=self)
-        print("get_member_uuids", tms)
         return [tm.user.uuid for tm in tms]
 
     def add_members(self, member_uuids):
         members = user_models.User.objects.filter(uuid__in=member_uuids)
-        print("add_members", members)
         for member in members:
             tm = TeamMember.objects.create(team=self, user=member)
 
     def remove_members(self, member_uuids):
         members = user_models.User.objects.filter(uuid__in=member_uuids)
-        print("remove_members", members)
         TeamMember.objects.filter(team=self, user__in=members).delete()
 
 

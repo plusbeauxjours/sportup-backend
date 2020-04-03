@@ -36,17 +36,17 @@ class User(AbstractUser):
     def following_count(self):
         return self.following.all().count()
 
-    def get_sport_ids(self):
+    def get_sport_uuids(self):
         ups = UserPlaysSport.objects.filter(user=self)
-        return [obj.sport.id for obj in ups]
+        return [obj.sport.uuid for obj in ups]
 
-    def add_sports(self, sport_ids):
-        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+    def add_sports(self, sport_uuids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_uuids)
         for sport in sports:
             ups = UserPlaysSport.objects.create(user=self, sport=sport)
 
-    def remove_sports(self, sport_ids):
-        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
+    def remove_sports(self, sport_uuids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_uuids)
         UserPlaysSport.objects.filter(user=self, sport__in=sports).delete()
 
     def has_sport(self, sport):
@@ -56,8 +56,8 @@ class User(AbstractUser):
         except UserPlaysSport.DoesNotExist:
             return False
 
-    def rate_user_sport(self, uuid, sport_id, rating):
-        sport = sport_models.Sport.objects.get(pk=sport_id)
+    def rate_user_sport(self, uuid, sport_uuid, rating):
+        sport = sport_models.Sport.objects.get(uuid=sport_uuid)
         user = User.objects.get(uuid=uuid)
         ups = UserPlaysSport.objects.get(user=user, sport=sport)
 
@@ -73,10 +73,8 @@ class User(AbstractUser):
     def is_team_admin(self, team):
         try:
             tm = team_models.TeamMember.objects.get(user=self, team=team)
-            print("tm", tm)
             return tm.is_admin
         except team_models.TeamMember.DoesNotExist:
-            print("tmx")
             return False
 
 

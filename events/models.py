@@ -1,9 +1,13 @@
+import uuid
 from django.db import models
 from core import models as core_models
 
 
 class Event(core_models.TimeStampedModel):
     name = models.TextField()
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
+    )
     description = models.TextField(blank=True, null=True)
     cover_img = models.ImageField(upload_to="event_cover_imgs/", blank=True, null=True)
     document = models.FileField(upload_to="event_docs/", blank=True, null=True)
@@ -25,6 +29,9 @@ class Event(core_models.TimeStampedModel):
 
 
 class Registration(models.Model):
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
+    )
     name = models.CharField(max_length=20)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     registered_by = models.ForeignKey("users.User", on_delete=models.CASCADE)

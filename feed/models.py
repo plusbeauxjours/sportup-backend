@@ -1,8 +1,12 @@
+import uuid
 from django.db import models
 from core import models as core_models
 
 
 class Post(core_models.TimeStampedModel):
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
+    )
     posted_by = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="post"
     )

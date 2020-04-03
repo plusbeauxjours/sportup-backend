@@ -13,10 +13,9 @@ def resolve_get_my_feed(self, info, **kwargs):
     user = info.context.user
 
     posts = user.post.all()
-    pg = Paginator(posts, 2)
+    pg = Paginator(posts, 5)
     if page_num > pg.num_pages:
         return None
-    print("page_num", page_num, "pg.num_pages", pg.num_pages)
 
     posts = pg.get_page(page_num)
     return types.GetMyFeedResponse(posts=posts)
@@ -32,7 +31,7 @@ def resolve_get_user_feed(self, info, **kwargs):
         user = user_models.User.objects.get(uuid=uuid)
 
         posts = user.post.all()
-        pg = Paginator(posts, 2)
+        pg = Paginator(posts, 5)
 
         if page_num > pg.num_pages:
             return None
@@ -54,7 +53,7 @@ def resolve_get_main_feed(self, info, **kwargs):
     criterion2 = Q(posted_by=user)
 
     posts = models.Post.objects.filter(criterion1 | criterion2)
-    pg = Paginator(posts, 2)
+    pg = Paginator(posts, 5)
 
     if page_num > pg.num_pages:
         return None

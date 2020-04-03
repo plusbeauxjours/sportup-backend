@@ -6,6 +6,7 @@ from . import models
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "uuid",
         "score",
         "text",
         "posted_by",

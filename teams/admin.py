@@ -6,6 +6,7 @@ from . import models
 class TeamsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "uuid",
         "name",
         "rating",
     )

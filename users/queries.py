@@ -6,6 +6,7 @@ from graphql_jwt.decorators import login_required
 @login_required
 def resolve_me(self, info):
     user = info.context.user
+    print(user)
     return types.MeReponse(user=user)
 
 
@@ -24,13 +25,15 @@ def resolve_get_user(self, info, **kwargs):
 @login_required
 def resolve_get_users_for_games(self, info, **kwargs):
     user = info.context.user
-    sport_ids = kwargs.get("sport_ids", [])
+    sport_uuids = kwargs.get("sport_uuids", [])
 
-    if sport_ids == []:
-        users = models.User.objects.exclude(pk=user.id)
+    if sport_uuids == []:
+        users = models.User.objects.exclude(uuid=user.uuid)
         return types.GetUsersForGamesResponse(users=users)
 
-    users = models.User.objects.exclude(pk=user.id).filter(sports__pk__in=sport_ids)
+    users = models.User.objects.exclude(uuid=user.uuid).filter(
+        sports__pk__in=sport_uuids
+    )
     return types.GetUsersForGamesResponse(users=users)
 
 

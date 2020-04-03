@@ -8,7 +8,7 @@ from . import types, models
 class CreateTeam(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
-        sport_id = graphene.Int(required=True)
+        sport_uuid = graphene.String(required=True)
         member_uuids = graphene.List(graphene.String)
 
     Output = types.CreateTeamResponse
@@ -17,11 +17,11 @@ class CreateTeam(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         name = kwargs.get("name")
-        sport_id = kwargs.get("sport_id")
+        sport_uuid = kwargs.get("sport_uuid")
         member_uuids = kwargs.get("member_uuids")
 
         try:
-            sport = sport_models.Sport.objects.get(pk=sport_id)
+            sport = sport_models.Sport.objects.get(uuid=sport_uuid)
             team = models.Team.objects.create(name=name, sport=sport, created_by=user)
             tm = models.TeamMember.objects.create(user=user, team=team, is_admin=True)
 
@@ -38,7 +38,7 @@ class CreateTeam(graphene.Mutation):
 
 class AddTeamMember(graphene.Mutation):
     class Arguments:
-        team_id = graphene.Int()
+        team_uuid = graphene.String()
         uuid = graphene.String()
         is_admin = graphene.Boolean()
 
@@ -47,12 +47,12 @@ class AddTeamMember(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        team_id = kwargs.get("team_id")
+        team_uuid = kwargs.get("team_uuid")
         uuid = kwargs.get("uuid")
         is_admin = kwargs.get("is_admin")
 
         try:
-            team = models.Team.objects.get(pk=team_id)
+            team = models.Team.objects.get(uuid=team_uuid)
             if not user.is_team_admin(team=team):
                 raise Exception("Not authorized to edit team.")
 
@@ -72,7 +72,7 @@ class AddTeamMember(graphene.Mutation):
 
 class RemoveTeamMember(graphene.Mutation):
     class Arguments:
-        team_id = graphene.Int()
+        team_uuid = graphene.String()
         uuid = graphene.String()
 
     Output = types.RemoveTeamMemberResponse
@@ -80,11 +80,11 @@ class RemoveTeamMember(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        team_id = kwargs.get("team_id")
+        team_uuid = kwargs.get("team_uuid")
         uuid = kwargs.get("uuid")
 
         try:
-            team = models.Team.objects.get(pk=team_id)
+            team = models.Team.objects.get(uuid=team_uuid)
             if not user.is_team_admin(team=team):
                 raise Exception("Not authorized to edit team.")
 
@@ -103,9 +103,9 @@ class RemoveTeamMember(graphene.Mutation):
 
 class UpdateTeam(graphene.Mutation):
     class Arguments:
-        team_id = graphene.Int()
+        team_uuid = graphene.String()
         name = graphene.String()
-        sport_id = graphene.Int()
+        sport_uuid = graphene.String()
         member_uuids = graphene.List(graphene.String)
 
     Output = types.UpdateTeamResponse
@@ -113,17 +113,17 @@ class UpdateTeam(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        team_id = kwargs.get("team_id")
+        team_uuid = kwargs.get("team_uuid")
         name = kwargs.get("name", None)
-        sport_id = kwargs.get("sport_id", None)
+        sport_uuid = kwargs.get("sport_uuid", None)
         member_uuids = kwargs.get("member_uuids", [])
 
         try:
-            team = models.Team.objects.get(pk=team_id)
+            team = models.Team.objects.get(uuid=team_uuid)
             if not user.is_team_admin(team=team):
                 raise Exception("Not authorized to edit team.")
 
-            team.update_profile(name=name, sport_id=sport_id)
+            team.update_profile(name=name, sport_uuid=sport_uuid)
             team_member_uuids = team.get_member_uuids()
             to_add = [
                 m_uuid for m_uuid in member_uuids if m_uuid not in team_member_uuids
@@ -131,8 +131,6 @@ class UpdateTeam(graphene.Mutation):
             to_remove = [
                 m_uuid for m_uuid in team_member_uuids if m_uuid not in member_uuids
             ]
-            print("to_add", to_add)
-            print("to_remove", to_remove)
 
             team.add_members(to_add)
             team.remove_members(to_remove)
@@ -145,7 +143,7 @@ class UpdateTeam(graphene.Mutation):
 
 class RateTeam(graphene.Mutation):
     class Arguments:
-        team_id = graphene.Int(required=True)
+        team_uuid = graphene.String(required=True)
         rating = graphene.Int(required=True)
 
     Output = types.RatesTeamResponse
@@ -153,10 +151,10 @@ class RateTeam(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        team_id = kwargs.get("team_id")
+        team_uuid = kwargs.get("team_uuid")
         rating = kwargs.get("rating")
 
-        team = models.Team.objects.get(pk=team_id)
+        team = models.Team.objects.get(uuid=team_uuid)
 
         try:
             urt = models.UserRatesTeam.objects.get(user=user, team=team)
@@ -169,4 +167,3 @@ class RateTeam(graphene.Mutation):
                 user=user, team=team, rating=rating
             )
             return types.RatesTeamResponse(ok=True)
-

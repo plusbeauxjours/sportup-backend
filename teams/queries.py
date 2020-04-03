@@ -4,10 +4,10 @@ from graphql_jwt.decorators import login_required
 
 @login_required
 def resolve_get_team(self, info, **kwargs):
-    id = kwargs.get("id", None)
+    uuid = kwargs.get("uuid", None)
 
-    if id:
-        team = models.Team.objects.get(pk=id)
+    if uuid:
+        team = models.Team.objects.get(uuid=uuid)
 
         return types.GetTeamResponse(team=team)
 
@@ -15,14 +15,14 @@ def resolve_get_team(self, info, **kwargs):
 @login_required
 def resolve_get_teams_for_game(self, info, **kwargs):
     user = info.context.user
-    sport_ids = kwargs.get("sport_ids", [])
+    sport_uuids = kwargs.get("sport_uuids", [])
 
-    if sport_ids == []:
+    if sport_uuids == []:
         teams = models.Team.objects.exclude(members__uuid=user.uuid)
         return types.GetTeamsForGameResponse(teams=teams)
 
     teams = models.Team.objects.exclude(members__uuid=user.uuid).filter(
-        sport__pk__in=sport_ids
+        sport__pk__in=sport_uuids
     )
 
     return types.GetTeamsForGameResponse(teams=teams)

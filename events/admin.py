@@ -6,6 +6,7 @@ from . import models
 class EventsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "uuid",
         "owner",
         "sport",
         "name",

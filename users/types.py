@@ -6,14 +6,14 @@ from graphql_jwt.decorators import login_required
 
 
 class UserPlaysSportType(DjangoObjectType):
-    sport_id = graphene.Int()
+    sport_uuid = graphene.String()
     name = graphene.String()
 
     class Meta:
         model = models.UserPlaysSport
 
-    def resolve_sport_id(self, info):
-        return self.sport.id
+    def resolve_sport_uuid(self, info):
+        return self.sport.uuid
 
     def resolve_name(self, info):
         return self.sport.name
@@ -41,7 +41,7 @@ class UserType(DjangoObjectType):
     def resolve_is_following(self, info):
         user = info.context.user
         try:
-            f = user.following.get(pk=self.pk)
+            f = user.following.get(uuid=self.uuid)
             return True
         except models.User.DoesNotExist:
             return False

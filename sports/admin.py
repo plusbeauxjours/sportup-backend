@@ -6,5 +6,6 @@ from . import models
 class SportsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "uuid",
         "name",
     )

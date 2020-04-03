@@ -7,13 +7,13 @@ class Query(object):
         types.GetEventResponse,
         resolver=queries.resolve_get_event,
         required=True,
-        args={"event_id": graphene.Int(required=True)},
+        args={"event_uuid": graphene.String(required=True)},
     )
     get_registration = graphene.Field(
         types.GetRegistrationResponse,
         resolver=queries.resolve_get_registration,
         required=True,
-        args={"event_id": graphene.Int(required=True)},
+        args={"event_uuid": graphene.String(required=True)},
     )
     get_search_events = graphene.Field(
         types.GetSearchEventsResponse,
