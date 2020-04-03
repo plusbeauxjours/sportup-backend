@@ -7,13 +7,19 @@ class Query(object):
         types.GetTeamResponse,
         resolver=queries.resolve_get_team,
         required=True,
-        args={"id": graphene.Int()},
+        args={"id": graphene.Int(),},
     )
     get_teams_for_game = graphene.Field(
         types.GetTeamsForGameResponse,
         resolver=queries.resolve_get_teams_for_game,
         required=True,
-        args={"sport_ids": graphene.List(graphene.Int)},
+        args={"sport_ids": graphene.List(graphene.Int),},
+    )
+    get_search_teams = graphene.Field(
+        types.GetSearchTeamsResponse,
+        resolver=queries.resolve_get_search_teams,
+        required=True,
+        args={"search_text": graphene.String(required=True),},
     )
 
 
