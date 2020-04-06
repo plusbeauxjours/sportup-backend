@@ -20,8 +20,23 @@ class UserPlaysSportType(DjangoObjectType):
 
 
 class FollowType(DjangoObjectType):
+    name = graphene.String()
+    is_following = graphene.Boolean()
+
     class Meta:
         model = models.User
+
+    @login_required
+    def resolve_is_following(self, info):
+        user = info.context.user
+        try:
+            f = user.following.get(uuid=self.uuid)
+            return True
+        except models.User.DoesNotExist:
+            return False
+
+    def resolve_name(self, info):
+        return self.get_full_name()
 
 
 class UserType(DjangoObjectType):
@@ -51,7 +66,7 @@ class UserType(DjangoObjectType):
 
     def resolve_followers(self, info, **kwargs):
         page_num = kwargs.get("page_num", 1)
-        qs = models.User.objects.filter(id__in=self.user.followers.all())
+        qs = models.User.objects.filter(pk__in=self.followers.all())
         pg = Paginator(qs, 12)
         return pg.get_page(page_num)
 
@@ -90,11 +105,11 @@ class CreateUserReponse(graphene.ObjectType):
 
 
 class FollowUserResponse(graphene.ObjectType):
-    ok = graphene.Boolean()
+    following = graphene.Field(FollowType)
 
 
 class UnfollowUserResponse(graphene.ObjectType):
-    ok = graphene.Boolean()
+    following = graphene.Field(FollowType)
 
 
 class AddSportsResponse(graphene.ObjectType):

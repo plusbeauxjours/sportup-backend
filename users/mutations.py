@@ -41,15 +41,14 @@ class FollowUser(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         uuid = kwargs.get("uuid")
-
         try:
             user_to_follow = models.User.objects.get(uuid=uuid)
             user.following.add(user_to_follow)
             user.save()
-            return types.FollowUserResponse(ok=True)
+            return types.FollowUserResponse(following=user_to_follow)
 
         except models.User.DoesNotExist:
-            return types.FollowUserResponse(ok=False)
+            return types.FollowUserResponse(following=None)
 
 
 class UnfollowUser(graphene.Mutation):
@@ -62,15 +61,14 @@ class UnfollowUser(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         uuid = kwargs.get("uuid")
-
         try:
             user_to_unfollow = models.User.objects.get(uuid=uuid)
             user.following.remove(user_to_unfollow)
             user.save()
-            return types.UnfollowUserResponse(ok=True)
+            return types.UnfollowUserResponse(following=user_to_unfollow)
 
         except models.User.DoesNotExist:
-            return types.UnfollowUserResponse(ok=False)
+            return types.UnfollowUserResponse(following=None)
 
 
 class AddSports(graphene.Mutation):
