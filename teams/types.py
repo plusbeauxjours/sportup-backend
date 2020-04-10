@@ -14,7 +14,7 @@ class TeamType(DjangoObjectType):
     @login_required
     def resolve_is_admin(self, info):
         user = info.context.user
-        return user.profile.is_team_admin(team=self)
+        return user.is_team_admin(team=self)
 
 
 class GetTeamResponse(graphene.ObjectType):
