@@ -9,7 +9,7 @@ class Team(core_models.TimeStampedModel):
     uuid = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
     )
-    name = models.CharField(max_length=50)
+    team_name = models.CharField(max_length=50)
     rating = models.FloatField(blank=True, null=True)
     cover_img = models.ImageField(upload_to="team_cover_imgs/", blank=True, null=True)
     sport = models.ForeignKey("sports.Sport", on_delete=models.PROTECT)
@@ -23,10 +23,10 @@ class Team(core_models.TimeStampedModel):
     )
 
     def __str__(self):
-        return self.name
+        return self.team_name
 
-    def update_profile(self, name, sport_uuid):
-        self.name = name
+    def update_profile(self, team_name, sport_uuid):
+        self.team_name = team_name
         if sport_uuid is not None:
             sport = sport_models.Sport.objects.get(uuid=sport_uuid)
             self.sport = sport

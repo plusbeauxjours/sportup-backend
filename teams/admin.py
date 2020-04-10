@@ -7,7 +7,7 @@ class TeamsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "uuid",
-        "name",
+        "team_name",
         "rating",
     )
 
