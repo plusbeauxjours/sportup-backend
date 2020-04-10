@@ -8,7 +8,13 @@ class Query(object):
         types.GetUserReponse,
         resolver=queries.resolve_get_user,
         required=True,
-        args={"username": graphene.String(), "uuid": graphene.String(required=True),},
+        args={"uuid": graphene.String(required=True),},
+    )
+    get_user_from_username = graphene.Field(
+        types.GetUserFromUsernameReponse,
+        resolver=queries.resolve_get_user_from_username,
+        required=True,
+        args={"username": graphene.String(required=True),},
     )
     get_users_for_games = graphene.Field(
         types.GetUsersForGamesResponse,

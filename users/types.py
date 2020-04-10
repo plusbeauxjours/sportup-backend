@@ -91,6 +91,10 @@ class GetUserReponse(graphene.ObjectType):
     user = graphene.Field(UserType)
 
 
+class GetUserFromUsernameReponse(graphene.ObjectType):
+    user = graphene.Field(UserType)
+
+
 class GetUsersForGamesResponse(graphene.ObjectType):
     users = graphene.List(UserType)
 

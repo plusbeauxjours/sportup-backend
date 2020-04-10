@@ -13,23 +13,25 @@ def resolve_me(self, info):
 @login_required
 def resolve_get_user(self, info, **kwargs):
     uuid = kwargs.get("uuid", "")
+
+    try:
+        user = models.User.objects.get(uuid=uuid)
+        return types.GetUserReponse(user=user)
+
+    except models.User.DoesNotExist:
+        return types.GetUserReponse(user=None)
+
+
+@login_required
+def resolve_get_user_from_username(self, info, **kwargs):
     username = kwargs.get("username", "")
 
-    if id != "":
-        try:
-            user = models.User.objects.get(uuid=uuid)
-            return types.GetUserReponse(user=user)
+    try:
+        user = models.User.objects.get(username=username)
+        return types.GetUserReponse(user=user)
 
-        except models.User.DoesNotExist:
-            return types.GetUserReponse(user=None)
-
-    if username != "":
-        try:
-            user = models.User.objects.get(username=username)
-            return types.GetUserReponse(user=user)
-
-        except models.User.DoesNotExist:
-            return types.GetUserReponse(user=None)
+    except models.User.DoesNotExist:
+        return types.GetUserReponse(user=None)
 
 
 @login_required
