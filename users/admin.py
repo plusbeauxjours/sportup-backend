@@ -9,7 +9,10 @@ class CustomUserAdmin(UserAdmin):
     """Custom User Admin"""
 
     fieldsets = UserAdmin.fieldsets + (
-        ("None", {"fields": ("gender", "bio", "following", "followers",),},),
+        (
+            "None",
+            {"fields": ("gender", "user_img", "bio", "following", "followers",),},
+        ),
     )
 
     list_display = (
