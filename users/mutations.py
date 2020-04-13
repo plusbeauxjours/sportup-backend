@@ -193,7 +193,7 @@ class RateUserSport(graphene.Mutation):
         uuid = kwargs.get("uuid")
         sport_uuid = kwargs.get("sport_uuid")
         rating = kwargs.get("rating")
-
+        print(uuid, sport_uuid, rating)
         user.rate_user_sport(uuid, sport_uuid, rating)
         user.save()
 

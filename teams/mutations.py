@@ -104,9 +104,9 @@ class RemoveTeamMember(graphene.Mutation):
 
 class UpdateTeam(graphene.Mutation):
     class Arguments:
-        team_uuid = graphene.String()
-        team_name = graphene.String()
-        sport_uuid = graphene.String()
+        team_uuid = graphene.String(required=True)
+        team_name = graphene.String(required=True)
+        sport_uuid = graphene.String(required=True)
         member_uuids = graphene.List(graphene.String)
 
     Output = types.UpdateTeamResponse
@@ -132,7 +132,6 @@ class UpdateTeam(graphene.Mutation):
             to_remove = [
                 m_uuid for m_uuid in team_member_uuids if m_uuid not in member_uuids
             ]
-
             team.add_members(to_add)
             team.remove_members(to_remove)
             team.save()

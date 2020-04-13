@@ -33,7 +33,7 @@ class Team(core_models.TimeStampedModel):
 
     def get_member_uuids(self):
         tms = TeamMember.objects.filter(team=self)
-        return [tm.user.uuid for tm in tms]
+        return [str(tm.user.uuid) for tm in tms]
 
     def add_members(self, member_uuids):
         members = user_models.User.objects.filter(uuid__in=member_uuids)
