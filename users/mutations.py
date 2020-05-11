@@ -123,18 +123,6 @@ class UpdateUser(graphene.Mutation):
         last_name = kwargs.get("last_name", "")
         password = kwargs.get("password", "")
         user_img = kwargs.get("user_img", None)
-        print(
-            "bio",
-            bio,
-            "first_name",
-            first_name,
-            "last_name",
-            last_name,
-            "password",
-            password,
-            "user_img",
-            user_img,
-        )
         if first_name != "":
             user.first_name = first_name
 
