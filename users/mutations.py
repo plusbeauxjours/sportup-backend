@@ -33,16 +33,16 @@ class CreateUser(graphene.Mutation):
 
 class FollowUser(graphene.Mutation):
     class Arguments:
-        uuid = graphene.String(required=True)
+        id = graphene.String(required=True)
 
     Output = types.FollowUserResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        uuid = kwargs.get("uuid")
+        id = kwargs.get("id")
         try:
-            user_to_follow = models.User.objects.get(uuid=uuid)
+            user_to_follow = models.User.objects.get(id=id)
             user.following.add(user_to_follow)
             user.save()
             return types.FollowUserResponse(following=user_to_follow)
@@ -53,16 +53,16 @@ class FollowUser(graphene.Mutation):
 
 class UnfollowUser(graphene.Mutation):
     class Arguments:
-        uuid = graphene.String(required=True)
+        id = graphene.String(required=True)
 
     Output = types.UnfollowUserResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        uuid = kwargs.get("uuid")
+        id = kwargs.get("id")
         try:
-            user_to_unfollow = models.User.objects.get(uuid=uuid)
+            user_to_unfollow = models.User.objects.get(id=id)
             user.following.remove(user_to_unfollow)
             user.save()
             return types.UnfollowUserResponse(following=user_to_unfollow)
@@ -73,16 +73,16 @@ class UnfollowUser(graphene.Mutation):
 
 class AddSports(graphene.Mutation):
     class Arguments:
-        sport_uuids = graphene.List(graphene.String, required=True)
+        sport_ids = graphene.List(graphene.String, required=True)
 
     Output = types.AddSportsResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        sport_uuids = kwargs.get("sport_uuids")
+        sport_ids = kwargs.get("sport_ids")
 
-        user.add_sports(sport_uuids)
+        user.add_sports(sport_ids)
         user.save()
 
         return types.AddSportsResponse(ok=True)
@@ -90,16 +90,16 @@ class AddSports(graphene.Mutation):
 
 class RemoveSports(graphene.Mutation):
     class Arguments:
-        sport_uuids = graphene.List(graphene.String, required=True)
+        sport_ids = graphene.List(graphene.String, required=True)
 
     Output = types.AddSportsResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        sport_uuids = kwargs.get("sport_uuids")
+        sport_ids = kwargs.get("sport_ids")
 
-        user.remove_sports(sport_uuids)
+        user.remove_sports(sport_ids)
         user.save()
 
         return types.RemoveSportsResponse(ok=True)
@@ -145,20 +145,20 @@ class UpdateUser(graphene.Mutation):
 
 class UpdateSports(graphene.Mutation):
     class Arguments:
-        sport_uuids = graphene.List(graphene.String, required=True)
+        sport_ids = graphene.List(graphene.String, required=True)
 
     Output = types.UpdateSportsResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        sport_uuids = kwargs.get("sport_uuids")
+        sport_ids = kwargs.get("sport_ids")
 
         ups = models.UserPlaysSport.objects.filter(user=user)
-        user_sport_uuids = [obj.sport.uuid for obj in ups]
+        user_sport_ids = [obj.sport.id for obj in ups]
 
-        to_add = [s_uuid for s_uuid in sport_uuids if s_uuid not in user_sport_uuids]
-        to_remove = [s_uuid for s_uuid in user_sport_uuids if s_uuid not in sport_uuids]
+        to_add = [s_id for s_id in sport_ids if s_id not in user_sport_ids]
+        to_remove = [s_id for s_id in user_sport_ids if s_id not in sport_ids]
 
         user.add_sports(to_add)
         user.remove_sports(to_remove)
@@ -169,8 +169,8 @@ class UpdateSports(graphene.Mutation):
 
 class RateUserSport(graphene.Mutation):
     class Arguments:
-        uuid = graphene.String(required=True)
-        sport_uuid = graphene.String(required=True)
+        id = graphene.String(required=True)
+        sport_id = graphene.String(required=True)
         rating = graphene.Int(required=True)
 
     Output = types.RateUserSportResponse
@@ -178,11 +178,11 @@ class RateUserSport(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        uuid = kwargs.get("uuid")
-        sport_uuid = kwargs.get("sport_uuid")
+        id = kwargs.get("id")
+        sport_id = kwargs.get("sport_id")
         rating = kwargs.get("rating")
-        print(uuid, sport_uuid, rating)
-        user.rate_user_sport(uuid, sport_uuid, rating)
+        print(id, sport_id, rating)
+        user.rate_user_sport(id, sport_id, rating)
         user.save()
 
         return types.RateUserSportResponse(ok=True)

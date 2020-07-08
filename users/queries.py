@@ -11,10 +11,10 @@ def resolve_me(self, info):
 
 @login_required
 def resolve_get_user(self, info, **kwargs):
-    uuid = kwargs.get("uuid", "")
+    id = kwargs.get("id", "")
 
     try:
-        user = models.User.objects.get(uuid=uuid)
+        user = models.User.objects.get(id=id)
         return types.GetUserReponse(user=user)
 
     except models.User.DoesNotExist:
@@ -36,15 +36,13 @@ def resolve_get_user_from_username(self, info, **kwargs):
 @login_required
 def resolve_get_users_for_games(self, info, **kwargs):
     user = info.context.user
-    sport_uuids = kwargs.get("sport_uuids", [])
+    sport_ids = kwargs.get("sport_ids", [])
 
-    if sport_uuids == []:
-        users = models.User.objects.exclude(uuid=user.uuid)
+    if sport_ids == []:
+        users = models.User.objects.exclude(id=user.id)
         return types.GetUsersForGamesResponse(users=users)
 
-    users = models.User.objects.exclude(uuid=user.uuid).filter(
-        sports__pk__in=sport_uuids
-    )
+    users = models.User.objects.exclude(id=user.id).filter(sports__pk__in=sport_ids)
     return types.GetUsersForGamesResponse(users=users)
 
 
@@ -57,4 +55,5 @@ def resolve_get_search_users(self, info, **kwargs):
     users = models.User.objects.filter(
         search_first_names | search_last_names | search_username
     )[:7]
+    print(users)
     return types.GetSearchUsersResponse(users=users)

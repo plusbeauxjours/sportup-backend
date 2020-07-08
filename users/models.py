@@ -1,5 +1,4 @@
 from django.db import models
-import uuid
 from django.contrib.auth.models import AbstractUser
 from core import models as core_models
 from sports import models as sport_models
@@ -17,10 +16,6 @@ class User(AbstractUser):
         (GENDER_FEMALE, "Female"),
         (GENDER_OTHER, "Other"),
     )
-
-    uuid = models.UUIDField(
-        default=uuid.uuid4, editable=False, unique=True, blank=True, null=True
-    )
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
@@ -36,17 +31,17 @@ class User(AbstractUser):
     def following_count(self):
         return self.following.all().count()
 
-    def get_sport_uuids(self):
+    def get_sport_ids(self):
         ups = UserPlaysSport.objects.filter(user=self)
-        return [obj.sport.uuid for obj in ups]
+        return [obj.sport.id for obj in ups]
 
-    def add_sports(self, sport_uuids):
-        sports = sport_models.Sport.objects.filter(pk__in=sport_uuids)
+    def add_sports(self, sport_ids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
         for sport in sports:
             ups = UserPlaysSport.objects.create(user=self, sport=sport)
 
-    def remove_sports(self, sport_uuids):
-        sports = sport_models.Sport.objects.filter(pk__in=sport_uuids)
+    def remove_sports(self, sport_ids):
+        sports = sport_models.Sport.objects.filter(pk__in=sport_ids)
         UserPlaysSport.objects.filter(user=self, sport__in=sports).delete()
 
     def has_sport(self, sport):
@@ -56,9 +51,9 @@ class User(AbstractUser):
         except UserPlaysSport.DoesNotExist:
             return False
 
-    def rate_user_sport(self, uuid, sport_uuid, rating):
-        sport = sport_models.Sport.objects.get(uuid=sport_uuid)
-        user = User.objects.get(uuid=uuid)
+    def rate_user_sport(self, id, sport_id, rating):
+        sport = sport_models.Sport.objects.get(id=sport_id)
+        user = User.objects.get(id=id)
         ups = UserPlaysSport.objects.get(user=user, sport=sport)
 
         try:

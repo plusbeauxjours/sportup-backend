@@ -6,10 +6,10 @@ from graphql_jwt.decorators import login_required
 
 @login_required
 def resolve_get_event(self, info, **kwargs):
-    event_uuid = kwargs.get("event_uuid")
+    event_id = kwargs.get("event_id")
 
     try:
-        event = models.Event.objects.get(uuid=event_uuid)
+        event = models.Event.objects.get(id=event_id)
         return types.GetEventResponse(event=event)
 
     except models.Event.DoesNotExist:
@@ -17,9 +17,9 @@ def resolve_get_event(self, info, **kwargs):
 
 
 def resolve_get_registration(self, info, **kwargs):
-    event_uuid = kwargs.get("event_uuid")
+    event_id = kwargs.get("event_id")
 
-    registration = models.Registration.objects.filter(event__uuid=event_uuid).order_by(
+    registration = models.Registration.objects.filter(event__id=event_id).order_by(
         "approved"
     )
     return types.GetRegistrationResponse(registration=registration)

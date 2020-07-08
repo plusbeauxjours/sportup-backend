@@ -4,13 +4,13 @@ from . import models
 
 
 class SportType(DjangoObjectType):
-    sport_uuid = graphene.String()
+    sport_id = graphene.String()
 
     class Meta:
         model = models.Sport
 
-    def resolve_sport_uuid(self, info):
-        return self.uuid
+    def resolve_sport_id(self, info):
+        return self.id
 
 
 class GetAllSportReponse(graphene.ObjectType):

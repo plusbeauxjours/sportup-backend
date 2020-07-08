@@ -8,7 +8,7 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         description = graphene.String()
-        sport_uuid = graphene.String(required=True)
+        sport_id = graphene.String(required=True)
         start_date = graphene.Date()
         end_date = graphene.Date()
         start_time = graphene.Time()
@@ -23,7 +23,7 @@ class CreateEvent(graphene.Mutation):
         user = info.context.user
         name = kwargs.get("name")
         description = kwargs.get("description", None)
-        sport_uuid = kwargs.get("sport_uuid")
+        sport_id = kwargs.get("sport_id")
         start_date = kwargs.get("start_date", None)
         end_date = kwargs.get("end_date", None)
         start_time = kwargs.get("start_time", None)
@@ -33,7 +33,7 @@ class CreateEvent(graphene.Mutation):
         expected_teams = kwargs.get("expected_teams", 0)
 
         try:
-            sport = sport_models.Sport.objects.get(uuid=sport_uuid)
+            sport = sport_models.Sport.objects.get(id=sport_id)
             event = models.Event.objects.create(
                 owner=user,
                 name=name,
@@ -56,7 +56,7 @@ class CreateEvent(graphene.Mutation):
 
 class RegisterTeam(graphene.Mutation):
     class Arguments:
-        event_uuid = graphene.String(required=True)
+        event_id = graphene.String(required=True)
         team_name = graphene.String(required=True)
         captain_name = graphene.String(required=True)
         captain_cnic = graphene.String(required=True)
@@ -68,7 +68,7 @@ class RegisterTeam(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        event_uuid = kwargs.get("event_uuid")
+        event_id = kwargs.get("event_id")
         team_name = kwargs.get("team_name")
         captain_name = kwargs.get("captain_name")
         captain_cnic = kwargs.get("captain_cnic")
@@ -76,7 +76,7 @@ class RegisterTeam(graphene.Mutation):
         player_names = kwargs.get("player_names")
 
         try:
-            event = models.Event.objects.get(uuid=event_uuid)
+            event = models.Event.objects.get(id=event_id)
             registration = models.Registration.objects.create(
                 name=team_name,
                 event=event,
@@ -99,17 +99,17 @@ class RegisterTeam(graphene.Mutation):
 
 class ApproveRegistration(graphene.Mutation):
     class Arguments:
-        registration_uuid = graphene.String(required=True)
+        registration_id = graphene.String(required=True)
 
     Output = types.ApproveRegistrationResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        registration_uuid = kwargs.get("registration_uuid")
+        registration_id = kwargs.get("registration_id")
 
         try:
-            registration = models.Registration.objects.get(uuid=registration_uuid)
+            registration = models.Registration.objects.get(id=registration_id)
             if registration.event.owner != user:
                 raise Exception("Not authorized to edit event!")
 
@@ -123,17 +123,17 @@ class ApproveRegistration(graphene.Mutation):
 
 class DisapproveRegistration(graphene.Mutation):
     class Arguments:
-        registration_uuid = graphene.String(required=True)
+        registration_id = graphene.String(required=True)
 
     Output = types.DisapproveRegistrationResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        registration_uuid = kwargs.get("registration_uuid")
+        registration_id = kwargs.get("registration_id")
 
         try:
-            registration = models.Registration.objects.get(uuid=registration_uuid)
+            registration = models.Registration.objects.get(id=registration_id)
             if registration.event.owner != user:
                 raise Exception("Not authorized to edit event!")
 

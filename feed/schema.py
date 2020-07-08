@@ -13,7 +13,7 @@ class Query(object):
         types.GetUserFeedResponse,
         resolver=queries.resolve_get_user_feed,
         required=True,
-        args={"uuid": graphene.String(required=True), "page_num": graphene.Int()},
+        args={"id": graphene.String(required=True), "page_num": graphene.Int()},
     )
     get_main_feed = graphene.Field(
         types.GetMainFeedResponse,
