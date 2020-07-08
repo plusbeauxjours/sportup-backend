@@ -21,17 +21,17 @@ class CreatePost(graphene.Mutation):
 
 class UpvotePost(graphene.Mutation):
     class Arguments:
-        postid = graphene.String()
+        postId = graphene.String()
 
     Output = types.UpvotePostResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postid = kwargs.get("postid")
+        postId = kwargs.get("postId")
 
         try:
-            post = models.Post.objects.get(id=postid)
+            post = models.Post.objects.get(id=postId)
 
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)
@@ -60,17 +60,17 @@ class UpvotePost(graphene.Mutation):
 
 class DownvotePost(graphene.Mutation):
     class Arguments:
-        postid = graphene.String()
+        postId = graphene.String()
 
     Output = types.DownvotePostResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postid = kwargs.get("postid")
+        postId = kwargs.get("postId")
 
         try:
-            post = models.Post.objects.get(id=postid)
+            post = models.Post.objects.get(id=postId)
 
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)
@@ -99,17 +99,17 @@ class DownvotePost(graphene.Mutation):
 
 class RemovePostInteraction(graphene.Mutation):
     class Arguments:
-        postid = graphene.String()
+        postId = graphene.String()
 
     Output = types.RemovePostInteractionResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postid = kwargs.get("postid")
+        postId = kwargs.get("postId")
 
         try:
-            post = models.Post.objects.get(id=postid)
+            post = models.Post.objects.get(id=postId)
 
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)
