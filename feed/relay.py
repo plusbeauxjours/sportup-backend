@@ -10,7 +10,6 @@ from .models import Post
 class PostNode(DjangoObjectType):
     class Meta:
         model = Post
-        interfaces = (relay.Node,)
 
 
 class Query(graphene.ObjectType):

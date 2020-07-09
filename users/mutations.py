@@ -1,6 +1,5 @@
 import graphene
 from . import types, models
-from sports import models as sport_models
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required
 from graphene_file_upload.scalars import Upload
@@ -33,16 +32,16 @@ class CreateUser(graphene.Mutation):
 
 class FollowUser(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        user_id = graphene.String(required=True)
 
     Output = types.FollowUserResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        id = kwargs.get("id")
+        user_id = kwargs.get("user_id")
         try:
-            user_to_follow = models.User.objects.get(id=id)
+            user_to_follow = models.User.objects.get(id=user_id)
             user.following.add(user_to_follow)
             user.save()
             return types.FollowUserResponse(following=user_to_follow)
@@ -53,16 +52,16 @@ class FollowUser(graphene.Mutation):
 
 class UnfollowUser(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        user_id = graphene.String(required=True)
 
     Output = types.UnfollowUserResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        id = kwargs.get("id")
+        user_id = kwargs.get("user_id")
         try:
-            user_to_unfollow = models.User.objects.get(id=id)
+            user_to_unfollow = models.User.objects.get(id=user_id)
             user.following.remove(user_to_unfollow)
             user.save()
             return types.UnfollowUserResponse(following=user_to_unfollow)
@@ -169,7 +168,7 @@ class UpdateSports(graphene.Mutation):
 
 class RateUserSport(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        user_id = graphene.String(required=True)
         sport_id = graphene.String(required=True)
         rating = graphene.Int(required=True)
 
@@ -178,11 +177,11 @@ class RateUserSport(graphene.Mutation):
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        id = kwargs.get("id")
+        user_id = kwargs.get("user_id")
         sport_id = kwargs.get("sport_id")
         rating = kwargs.get("rating")
-        print(id, sport_id, rating)
-        user.rate_user_sport(id, sport_id, rating)
+        print(user_id, sport_id, rating)
+        user.rate_user_sport(user_id, sport_id, rating)
         user.save()
 
         return types.RateUserSportResponse(ok=True)

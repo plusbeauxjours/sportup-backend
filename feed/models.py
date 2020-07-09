@@ -24,9 +24,10 @@ class Post(core_models.TimeStampedModel):
 
 
 class UserPostInteraction(core_models.TimeStampedModel):
+    INTERACTION_CHOICES = (("UV", "Upvote"), ("DV", "Downvote"))
+
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    INTERACTION_CHOICES = (("UV", "Upvote"), ("DV", "Downvote"))
     interaction = models.CharField(
         max_length=2, choices=INTERACTION_CHOICES, blank=True, null=True
     )

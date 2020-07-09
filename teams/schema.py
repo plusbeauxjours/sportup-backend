@@ -7,7 +7,7 @@ class Query(object):
         types.GetTeamResponse,
         resolver=queries.resolve_get_team,
         required=True,
-        args={"id": graphene.String(),},
+        args={"team_id": graphene.String(),},
     )
     get_teams_for_game = graphene.Field(
         types.GetTeamsForGameResponse,

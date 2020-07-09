@@ -21,18 +21,16 @@ class CreatePost(graphene.Mutation):
 
 class UpvotePost(graphene.Mutation):
     class Arguments:
-        postId = graphene.String()
+        post_id = graphene.String()
 
     Output = types.UpvotePostResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postId = kwargs.get("postId")
-
+        post_id = kwargs.get("post_id")
         try:
-            post = models.Post.objects.get(id=postId)
-
+            post = models.Post.objects.get(id=post_id)
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)
 
@@ -60,23 +58,23 @@ class UpvotePost(graphene.Mutation):
 
 class DownvotePost(graphene.Mutation):
     class Arguments:
-        postId = graphene.String()
+        post_id = graphene.String()
 
     Output = types.DownvotePostResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postId = kwargs.get("postId")
+        post_id = kwargs.get("post_id")
 
         try:
-            post = models.Post.objects.get(id=postId)
+            post = models.Post.objects.get(id=post_id)
 
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)
 
                 if upi.interaction == "DV":
-                    return types.DownvotePostResponse(ok=True)
+                    return types.DownvotePostResponse(ok=True, post=post)
                 if upi.interaction == "UV":
                     post.score -= 1
 
@@ -94,22 +92,22 @@ class DownvotePost(graphene.Mutation):
             return types.DownvotePostResponse(ok=True)
 
         except models.Post.DoesNotExist:
-            return types.UpvotePostResponse(ok=False)
+            return types.DownvotePostResponse(ok=False)
 
 
 class RemovePostInteraction(graphene.Mutation):
     class Arguments:
-        postId = graphene.String()
+        post_id = graphene.String()
 
     Output = types.RemovePostInteractionResponse
 
     @login_required
     def mutate(self, info, **kwargs):
         user = info.context.user
-        postId = kwargs.get("postId")
+        post_id = kwargs.get("post_id")
 
         try:
-            post = models.Post.objects.get(id=postId)
+            post = models.Post.objects.get(id=post_id)
 
             try:
                 upi = models.UserPostInteraction.objects.get(user=user, post=post)

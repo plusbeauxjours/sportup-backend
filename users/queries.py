@@ -11,10 +11,10 @@ def resolve_me(self, info):
 
 @login_required
 def resolve_get_user(self, info, **kwargs):
-    id = kwargs.get("id", "")
+    user_id = kwargs.get("user_id", "")
 
     try:
-        user = models.User.objects.get(id=id)
+        user = models.User.objects.get(id=user_id)
         return types.GetUserReponse(user=user)
 
     except models.User.DoesNotExist:

@@ -10,7 +10,6 @@ class PostType(DjangoObjectType):
 
     class Meta:
         model = models.Post
-        interfaces = (relay.Node,)
 
     @login_required
     def resolve_interaction(self, info):

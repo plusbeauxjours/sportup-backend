@@ -24,11 +24,11 @@ def resolve_get_my_feed(self, info, **kwargs):
 @login_required
 def resolve_get_user_feed(self, info, **kwargs):
 
-    id = kwargs.get("id")
+    user_id = kwargs.get("user_id")
     page_num = kwargs.get("page_num", 1)
 
     try:
-        user = user_models.User.objects.get(id=id)
+        user = user_models.User.objects.get(id=user_id)
 
         posts = user.post.all()
         pg = Paginator(posts, 5)

@@ -4,10 +4,10 @@ from graphql_jwt.decorators import login_required
 
 @login_required
 def resolve_get_team(self, info, **kwargs):
-    id = kwargs.get("id", None)
+    team_id = kwargs.get("team_id", None)
 
-    if id:
-        team = models.Team.objects.get(id=id)
+    if team_id:
+        team = models.Team.objects.get(id=team_id)
 
         return types.GetTeamResponse(team=team)
 

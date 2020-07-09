@@ -51,9 +51,9 @@ class User(AbstractUser):
         except UserPlaysSport.DoesNotExist:
             return False
 
-    def rate_user_sport(self, id, sport_id, rating):
+    def rate_user_sport(self, user_id, sport_id, rating):
         sport = sport_models.Sport.objects.get(id=sport_id)
-        user = User.objects.get(id=id)
+        user = User.objects.get(id=user_id)
         ups = UserPlaysSport.objects.get(user=user, sport=sport)
 
         try:

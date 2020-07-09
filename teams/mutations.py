@@ -40,7 +40,7 @@ class CreateTeam(graphene.Mutation):
 class AddTeamMember(graphene.Mutation):
     class Arguments:
         team_id = graphene.String()
-        id = graphene.String()
+        user_id = graphene.String()
         is_admin = graphene.Boolean()
 
     Output = types.AddTeamMemberResponse
@@ -49,7 +49,7 @@ class AddTeamMember(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         team_id = kwargs.get("team_id")
-        id = kwargs.get("id")
+        user_id = kwargs.get("user_id")
         is_admin = kwargs.get("is_admin")
 
         try:
@@ -58,7 +58,7 @@ class AddTeamMember(graphene.Mutation):
                 raise Exception("Not authorized to edit team.")
 
             try:
-                new_member = user_models.User.objects.get(id=id)
+                new_member = user_models.User.objects.get(id=user_id)
                 tm = models.TeamMember.objects.create(
                     team=team, user=new_member, is_admin=is_admin
                 )
@@ -74,7 +74,7 @@ class AddTeamMember(graphene.Mutation):
 class RemoveTeamMember(graphene.Mutation):
     class Arguments:
         team_id = graphene.String()
-        id = graphene.String()
+        user_id = graphene.String()
 
     Output = types.RemoveTeamMemberResponse
 
@@ -82,7 +82,7 @@ class RemoveTeamMember(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         team_id = kwargs.get("team_id")
-        id = kwargs.get("id")
+        user_id = kwargs.get("user_id")
 
         try:
             team = models.Team.objects.get(id=team_id)
@@ -90,7 +90,7 @@ class RemoveTeamMember(graphene.Mutation):
                 raise Exception("Not authorized to edit team.")
 
             try:
-                user_to_remove = user_models.User.objects.get(id=id)
+                user_to_remove = user_models.User.objects.get(id=user_id)
                 tm = models.TeamMember.objects.get(user=user_to_remove, team=team)
                 tm.delete()
                 return types.RemoveTeamMemberResponse(ok=True)
