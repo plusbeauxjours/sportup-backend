@@ -28,6 +28,24 @@ def resolve_get_teams_for_game(self, info, **kwargs):
     return types.GetTeamsForGameResponse(teams=teams)
 
 
+@login_required
+def resolve_get_teams_for_player(self, info, **kwargs):
+    user = info.context.user
+    user_id = kwargs.get("user_id")
+    sport_ids = kwargs.get("sport_ids", [])
+
+    if sport_ids == []:
+        teams = models.Team.objects.exclude(members__id=user.id).filter(
+            created_by__id=user_id
+        )
+        return types.GetTeamsForPlayerResponse(teams=teams)
+    else:
+        teams = models.Team.objects.exclude(members__id=user.id).filter(
+            sport__pk__in=sport_ids, created_by__id=user_id
+        )
+        return types.GetTeamsForPlayerResponse(teams=teams)
+
+
 def resolve_get_search_teams(self, info, **kwargs):
     search_text = kwargs.get("search_text", "")
 

@@ -25,12 +25,16 @@ class GetTeamsForGameResponse(graphene.ObjectType):
     teams = graphene.List(TeamType)
 
 
+class GetTeamsForPlayerResponse(graphene.ObjectType):
+    teams = graphene.List(TeamType)
+
+
 class GetSearchTeamsResponse(graphene.ObjectType):
     teams = graphene.List(TeamType)
 
 
 class CreateTeamResponse(graphene.ObjectType):
-    user = graphene.Field(user_types.UserType)
+    ok = graphene.Boolean()
 
 
 class AddTeamMemberResponse(graphene.ObjectType):

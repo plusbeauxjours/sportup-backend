@@ -30,7 +30,7 @@ class FollowType(DjangoObjectType):
     def resolve_is_following(self, info):
         user = info.context.user
         try:
-            f = user.following.get(id=self.id)
+            user.following.get(id=self.id)
             return True
         except models.User.DoesNotExist:
             return False
@@ -56,7 +56,7 @@ class UserType(DjangoObjectType):
     def resolve_is_following(self, info):
         user = info.context.user
         try:
-            f = user.following.get(id=self.id)
+            user.following.get(id=self.id)
             return True
         except models.User.DoesNotExist:
             return False

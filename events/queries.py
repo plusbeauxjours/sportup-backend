@@ -16,13 +16,13 @@ def resolve_get_event(self, info, **kwargs):
         return types.GetEventResponse(event=None)
 
 
-def resolve_get_registration(self, info, **kwargs):
+def resolve_get_registrations(self, info, **kwargs):
     event_id = kwargs.get("event_id")
 
-    registration = models.Registration.objects.filter(event__id=event_id).order_by(
+    registrations = models.Registration.objects.filter(event__id=event_id).order_by(
         "approved"
     )
-    return types.GetRegistrationResponse(registration=registration)
+    return types.GetRegistrationsResponse(registrations=registrations)
 
 
 def resolve_get_search_events(self, info, **kwargs):

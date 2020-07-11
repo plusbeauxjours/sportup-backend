@@ -16,7 +16,7 @@ class Query(object):
         required=True,
         args={"username": graphene.String(required=True),},
     )
-    get_users_for_games = graphene.Field(
+    get_users_for_game = graphene.Field(
         types.GetUsersForGamesResponse,
         resolver=queries.resolve_get_users_for_games,
         required=True,

@@ -21,6 +21,15 @@ class Query(object):
         required=True,
         args={"search_text": graphene.String(required=True),},
     )
+    get_teams_for_player = graphene.Field(
+        types.GetTeamsForPlayerResponse,
+        resolver=queries.resolve_get_teams_for_player,
+        required=True,
+        args={
+            "user_id": graphene.String(),
+            "sport_ids": graphene.List(graphene.String),
+        },
+    )
 
 
 class Mutation(object):

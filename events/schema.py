@@ -9,9 +9,9 @@ class Query(object):
         required=True,
         args={"event_id": graphene.String(required=True)},
     )
-    get_registration = graphene.Field(
-        types.GetRegistrationResponse,
-        resolver=queries.resolve_get_registration,
+    get_registrations = graphene.Field(
+        types.GetRegistrationsResponse,
+        resolver=queries.resolve_get_registrations,
         required=True,
         args={"event_id": graphene.String(required=True)},
     )

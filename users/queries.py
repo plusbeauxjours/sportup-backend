@@ -37,13 +37,10 @@ def resolve_get_user_from_username(self, info, **kwargs):
 def resolve_get_users_for_games(self, info, **kwargs):
     user = info.context.user
     sport_ids = kwargs.get("sport_ids", [])
-    print("sport_ids", sport_ids)
     if sport_ids == []:
         users = models.User.objects.exclude(id=user.id)
         return types.GetUsersForGamesResponse(users=users)
-
     users = models.User.objects.exclude(id=user.id).filter(sports__pk__in=sport_ids)
-    print("users", users)
     return types.GetUsersForGamesResponse(users=users)
 
 

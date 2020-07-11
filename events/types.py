@@ -30,8 +30,8 @@ class GetEventResponse(graphene.ObjectType):
     event = graphene.Field(EventType)
 
 
-class GetRegistrationResponse(graphene.ObjectType):
-    registration = graphene.List(RegistrationType)
+class GetRegistrationsResponse(graphene.ObjectType):
+    registrations = graphene.List(RegistrationType)
 
 
 class GetSearchEventsResponse(graphene.ObjectType):

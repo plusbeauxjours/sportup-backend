@@ -7,6 +7,7 @@ class TeamsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "team_name",
+        "created_by",
         "rating",
     )
 

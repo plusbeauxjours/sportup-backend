@@ -19,7 +19,6 @@ class CreateTeam(graphene.Mutation):
         team_name = kwargs.get("team_name")
         sport_id = kwargs.get("sport_id")
         member_ids = kwargs.get("member_ids")
-        print(team_name, sport_id, member_ids)
         try:
             sport = sport_models.Sport.objects.get(id=sport_id)
             team = models.Team.objects.create(
@@ -31,10 +30,10 @@ class CreateTeam(graphene.Mutation):
                 if member.id != user.id:
                     models.TeamMember.objects.create(user=member, team=team)
 
-            return types.CreateTeamResponse(user=user)
+            return types.CreateTeamResponse(ok=True)
 
         except sport_models.Sport.DoesNotExist:
-            return types.CreateTeamResponse(user=None)
+            return types.CreateTeamResponse(ok=False)
 
 
 class AddTeamMember(graphene.Mutation):
