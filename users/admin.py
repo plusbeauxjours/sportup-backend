@@ -28,6 +28,7 @@ class CustomUserAdmin(UserAdmin):
 class UserPlaysSportAdmin(admin.ModelAdmin):
 
     list_display = (
+        "id",
         "user",
         "rating",
         "sport",
@@ -37,8 +38,4 @@ class UserPlaysSportAdmin(admin.ModelAdmin):
 @admin.register(models.UserRatesSport)
 class UserRatesSportAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "rater",
-        "rated_user_sport",
-        "rating",
-    )
+    list_display = ("id", "rater", "rated_user_sport", "rating", "rated_by")

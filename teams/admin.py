@@ -24,9 +24,4 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(models.UserRatesTeam)
 class UserRatesTeamAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "user",
-        "team",
-        "rating",
-    )
+    list_display = ("id", "team", "rating", "rated_by")

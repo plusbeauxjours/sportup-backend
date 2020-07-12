@@ -14,9 +14,6 @@ class Team(core_models.TimeStampedModel):
         "users.User", related_name="creator", on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    rated_by = models.ManyToManyField(
-        "users.User", related_name="rated", through="UserRatesTeam", blank=True
-    )
 
     def __str__(self):
         return self.team_name
@@ -40,6 +37,15 @@ class Team(core_models.TimeStampedModel):
         members = user_models.User.objects.filter(id__in=member_ids)
         TeamMember.objects.filter(team=self, user__in=members).delete()
 
+    def rate_team(self, team_id, rating):
+        team = Team.objects.get(id=team_id)
+        try:
+            urut = UserRatesTeam.objects.get(team=team, rated_by=self)
+            urut.rating = rating
+            urut.save()
+        except UserRatesTeam.DoesNotExist:
+            urut = UserRatesTeam.objects.create(team=team, rated_by=self, rating=rating)
+
 
 class TeamMember(core_models.TimeStampedModel):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
@@ -48,6 +54,6 @@ class TeamMember(core_models.TimeStampedModel):
 
 
 class UserRatesTeam(core_models.TimeStampedModel):
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     rating = models.IntegerField()
+    rated_by = models.OneToOneField("users.User", on_delete=models.CASCADE, blank=True)

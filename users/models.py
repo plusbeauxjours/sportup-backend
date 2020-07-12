@@ -55,14 +55,15 @@ class User(AbstractUser):
         sport = sport_models.Sport.objects.get(id=sport_id)
         user = User.objects.get(id=user_id)
         ups = UserPlaysSport.objects.get(user=user, sport=sport)
-
         try:
-            urus = UserRatesSport.objects.get(rater=user, rated_user_sport=ups)
+            urus = UserRatesSport.objects.get(
+                rater=user, rated_user_sport=ups, rated_by=self
+            )
             urus.rating = rating
             urus.save()
         except UserRatesSport.DoesNotExist:
             urus = UserRatesSport.objects.create(
-                rater=user, rated_user_sport=ups, rating=rating
+                rater=user, rated_user_sport=ups, rating=rating, rated_by=self
             )
 
     def is_team_admin(self, team):
@@ -77,17 +78,20 @@ class UserPlaysSport(core_models.TimeStampedModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="UserPlaysSport_user",
     )
-    rating = models.FloatField(blank=True, null=True)
     sport = models.ForeignKey("sports.Sport", on_delete=models.CASCADE)
-    rated_by = models.ManyToManyField(
-        User,
-        through="UserRatesSport",
-        blank=True,
-        related_name="UserPlaysSport_rated_by",
-    )
+
+    def rating(self):
+        rates = self.rated_user_sport_user.all()
+        return sum(rates.rating).len(rates.rating)
+
+    def __str__(self):
+        return self.sport.name
 
 
 class UserRatesSport(core_models.TimeStampedModel):
-    rater = models.ForeignKey(User, on_delete=models.CASCADE)
-    rated_user_sport = models.ForeignKey(UserPlaysSport, on_delete=models.CASCADE)
+    rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rater")
+    rated_user_sport = models.ForeignKey(
+        UserPlaysSport, related_name="rated_user_sport_user", on_delete=models.CASCADE
+    )
     rating = models.IntegerField()
+    rated_by = models.OneToOneField(User, on_delete=models.CASCADE, blank=True)

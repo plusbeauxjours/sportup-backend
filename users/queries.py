@@ -53,5 +53,4 @@ def resolve_get_search_users(self, info, **kwargs):
     users = models.User.objects.filter(
         search_first_names | search_last_names | search_username
     )[:7]
-    print(users)
     return types.GetSearchUsersResponse(users=users)
