@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from core import models as core_models
 from sports import models as sport_models
 from teams import models as team_models
+from django.db.models import Avg
 
 
 class User(AbstractUser):
@@ -81,8 +82,10 @@ class UserPlaysSport(core_models.TimeStampedModel):
     sport = models.ForeignKey("sports.Sport", on_delete=models.CASCADE)
 
     def rating(self):
-        rates = self.rated_user_sport_user.all()
-        return sum(rates.rating).len(rates.rating)
+        avg = UserRatesSport.objects.filter(rater=self.user).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+        return avg
 
     def __str__(self):
         return self.sport.name
