@@ -49,5 +49,8 @@ def resolve_get_teams_for_player(self, info, **kwargs):
 def resolve_get_search_teams(self, info, **kwargs):
     search_text = kwargs.get("search_text", "")
 
-    teams = models.Team.objects.filter(team_name__icontains=search_text)[:5]
-    return types.GetSearchTeamsResponse(teams=teams)
+    if search_text == "":
+        return types.GetSearchTeamsResponse(teams=None)
+    else:
+        teams = models.Team.objects.filter(team_name__icontains=search_text)[:5]
+        return types.GetSearchTeamsResponse(teams=teams)

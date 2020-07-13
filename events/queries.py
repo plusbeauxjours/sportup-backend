@@ -28,8 +28,11 @@ def resolve_get_registrations(self, info, **kwargs):
 def resolve_get_search_events(self, info, **kwargs):
     search_text = kwargs.get("search_text", "")
 
-    events = models.Event.objects.filter(name__icontains=search_text)[:3]
-    return types.GetSearchEventsResponse(events=events)
+    if search_text == "":
+        return types.GetSearchEventsResponse(events=None)
+    else:
+        events = models.Event.objects.filter(name__icontains=search_text)[:3]
+        return types.GetSearchEventsResponse(events=events)
 
 
 def resolve_get_upcoming_events(self, info):

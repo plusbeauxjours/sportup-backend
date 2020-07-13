@@ -47,10 +47,13 @@ def resolve_get_users_for_games(self, info, **kwargs):
 def resolve_get_search_users(self, info, **kwargs):
     search_text = kwargs.get("search_text", "")
 
-    search_first_names = Q(first_name__icontains=search_text)
-    search_last_names = Q(last_name__icontains=search_text)
-    search_username = Q(username__icontains=search_text)
-    users = models.User.objects.filter(
-        search_first_names | search_last_names | search_username
-    )[:7]
-    return types.GetSearchUsersResponse(users=users)
+    if search_text == "":
+        return types.GetSearchUsersResponse(users=None)
+    else:
+        search_first_names = Q(first_name__icontains=search_text)
+        search_last_names = Q(last_name__icontains=search_text)
+        search_username = Q(username__icontains=search_text)
+        users = models.User.objects.filter(
+            search_first_names | search_last_names | search_username
+        )[:7]
+        return types.GetSearchUsersResponse(users=users)

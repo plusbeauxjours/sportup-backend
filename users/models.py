@@ -69,7 +69,6 @@ class User(AbstractUser):
 
     def rate_team(self, team_id, rating):
         team = team_models.Team.objects.get(id=team_id)
-        print(self, team_id, rating)
         try:
             urut = team_models.UserRatesTeam.objects.get(team=team, rated_by=self)
             urut.rating = rating
