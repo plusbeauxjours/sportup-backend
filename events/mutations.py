@@ -82,7 +82,6 @@ class RegisterTeam(graphene.Mutation):
                 captain_name=captain_name,
                 captain_contact_num=captain_contact,
             )
-
             for name in player_names:
                 models.RegisteredPlayer.objects.create(
                     name=name, registration=registration
