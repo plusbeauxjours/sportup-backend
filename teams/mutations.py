@@ -149,16 +149,7 @@ class RateTeam(graphene.Mutation):
         team_id = kwargs.get("team_id")
         rating = kwargs.get("rating")
 
-        team = models.Team.objects.get(id=team_id)
+        user.rate_team(team_id, rating)
+        user.save()
 
-        try:
-            urt = models.UserRatesTeam.objects.get(user=user, team=team)
-            urt.rating = rating
-            urt.save()
-            return types.RatesTeamResponse(ok=True)
-
-        except models.UserRatesTeam.DoesNotExist:
-            new_urt = models.UserRatesTeam.objects.create(
-                user=user, team=team, rating=rating
-            )
-            return types.RatesTeamResponse(ok=True)
+        return types.RatesTeamResponse(ok=True)

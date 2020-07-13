@@ -2,6 +2,7 @@ from django.db import models
 from users import models as user_models
 from sports import models as sport_models
 from core import models as core_models
+from django.db.models import Avg
 
 
 class Team(core_models.TimeStampedModel):
@@ -37,14 +38,11 @@ class Team(core_models.TimeStampedModel):
         members = user_models.User.objects.filter(id__in=member_ids)
         TeamMember.objects.filter(team=self, user__in=members).delete()
 
-    def rate_team(self, team_id, rating):
-        team = Team.objects.get(id=team_id)
-        try:
-            urut = UserRatesTeam.objects.get(team=team, rated_by=self)
-            urut.rating = rating
-            urut.save()
-        except UserRatesTeam.DoesNotExist:
-            urut = UserRatesTeam.objects.create(team=team, rated_by=self, rating=rating)
+    def rating(self):
+        avg = UserRatesTeam.objects.filter(team=self).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+        return round(avg, 1)
 
 
 class TeamMember(core_models.TimeStampedModel):

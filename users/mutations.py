@@ -180,6 +180,7 @@ class RateUserSport(graphene.Mutation):
         user_id = kwargs.get("user_id")
         sport_id = kwargs.get("sport_id")
         rating = kwargs.get("rating")
+
         user.rate_user_sport(user_id, sport_id, rating)
         user.save()
 

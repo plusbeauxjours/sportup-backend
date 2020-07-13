@@ -2,11 +2,11 @@ import graphene
 from graphql_jwt.decorators import login_required
 from graphene_django.types import DjangoObjectType
 from . import models
-from users import types as user_types
 
 
 class TeamType(DjangoObjectType):
     is_admin = graphene.Boolean()
+    rating = graphene.Float(source="rating")
 
     class Meta:
         model = models.Team

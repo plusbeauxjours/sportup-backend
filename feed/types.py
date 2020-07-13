@@ -23,14 +23,20 @@ class PostType(DjangoObjectType):
 
 class GetMyFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class GetUserFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class GetMainFeedResponse(graphene.ObjectType):
     posts = graphene.List(PostType, page_num=graphene.Int())
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class CreatePostReponse(graphene.ObjectType):

@@ -67,6 +67,18 @@ class User(AbstractUser):
                 rater=user, rated_user_sport=ups, rating=rating, rated_by=self
             )
 
+    def rate_team(self, team_id, rating):
+        team = team_models.Team.objects.get(id=team_id)
+        print(self, team_id, rating)
+        try:
+            urut = team_models.UserRatesTeam.objects.get(team=team, rated_by=self)
+            urut.rating = rating
+            urut.save()
+        except team_models.UserRatesTeam.DoesNotExist:
+            urut = team_models.UserRatesTeam.objects.create(
+                team=team, rated_by=self, rating=rating
+            )
+
     def is_team_admin(self, team):
         try:
             tm = team_models.TeamMember.objects.get(user=self, team=team)
@@ -85,7 +97,7 @@ class UserPlaysSport(core_models.TimeStampedModel):
         avg = UserRatesSport.objects.filter(rater=self.user).aggregate(Avg("rating"))[
             "rating__avg"
         ]
-        return avg
+        return round(avg, 1)
 
     def __str__(self):
         return self.sport.name

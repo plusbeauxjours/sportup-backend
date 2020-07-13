@@ -15,10 +15,18 @@ def resolve_get_my_feed(self, info, **kwargs):
     posts = user.post.all()
     pg = Paginator(posts, 5)
     if page_num > pg.num_pages:
-        return None
+        return types.GetMyFeedResponse(
+            posts=None, page_num=page_num, has_next_page=False
+        )
 
     posts = pg.get_page(page_num)
-    return types.GetMyFeedResponse(posts=posts)
+    if page_num + 1 > pg.num_pages:
+        has_next_page = False
+    else:
+        has_next_page = True
+    return types.GetMyFeedResponse(
+        posts=posts, page_num=page_num, has_next_page=has_next_page
+    )
 
 
 @login_required
@@ -34,10 +42,18 @@ def resolve_get_user_feed(self, info, **kwargs):
         pg = Paginator(posts, 5)
 
         if page_num > pg.num_pages:
-            return None
+            return types.GetUserFeedResponse(
+                posts=None, page_num=page_num, has_next_page=False
+            )
 
         posts = pg.get_page(page_num)
-        return types.GetUserFeedResponse(posts=posts)
+        if page_num + 1 > pg.num_pages:
+            has_next_page = False
+        else:
+            has_next_page = True
+        return types.GetUserFeedResponse(
+            posts=posts, page_num=page_num, has_next_page=has_next_page
+        )
 
     except models.Event.DoesNotExist:
         return types.GetUserFeedResponse(posts=None)
@@ -56,7 +72,15 @@ def resolve_get_main_feed(self, info, **kwargs):
     pg = Paginator(posts, 5)
 
     if page_num > pg.num_pages:
-        return None
+        return types.GetMainFeedResponse(
+            posts=None, page_num=page_num, has_next_page=False
+        )
 
     posts = pg.get_page(page_num)
-    return types.GetMainFeedResponse(posts=posts)
+    if page_num + 1 > pg.num_pages:
+        has_next_page = False
+    else:
+        has_next_page = True
+    return types.GetMainFeedResponse(
+        posts=posts, page_num=page_num, has_next_page=has_next_page
+    )

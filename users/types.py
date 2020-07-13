@@ -7,7 +7,7 @@ from graphql_jwt.decorators import login_required
 
 class UserPlaysSportType(DjangoObjectType):
     sport_id = graphene.String()
-    rating = graphene.Int(source="rating")
+    rating = graphene.Float(source="rating")
     name = graphene.String()
 
     class Meta:
