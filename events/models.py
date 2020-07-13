@@ -32,7 +32,6 @@ class Registration(models.Model):
     registered_on = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
     captain_name = models.CharField(max_length=20)
-    captain_cnic = models.CharField(max_length=15)
     captain_contact_num = models.CharField(max_length=12)
 
 

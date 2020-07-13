@@ -59,7 +59,6 @@ class RegisterTeam(graphene.Mutation):
         event_id = graphene.String(required=True)
         team_name = graphene.String(required=True)
         captain_name = graphene.String(required=True)
-        captain_cnic = graphene.String(required=True)
         captain_contact = graphene.String(required=True)
         player_names = graphene.List(graphene.String)
 
@@ -71,7 +70,6 @@ class RegisterTeam(graphene.Mutation):
         event_id = kwargs.get("event_id")
         team_name = kwargs.get("team_name")
         captain_name = kwargs.get("captain_name")
-        captain_cnic = kwargs.get("captain_cnic")
         captain_contact = kwargs.get("captain_contact")
         player_names = kwargs.get("player_names")
 
@@ -82,7 +80,6 @@ class RegisterTeam(graphene.Mutation):
                 event=event,
                 registered_by=user,
                 captain_name=captain_name,
-                captain_cnic=captain_cnic,
                 captain_contact_num=captain_contact,
             )
 
