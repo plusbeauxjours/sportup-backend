@@ -1,5 +1,6 @@
 import graphene
 from . import types, models
+from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required
 from graphene_file_upload.scalars import Upload
@@ -178,3 +179,30 @@ class RateUserSport(graphene.Mutation):
         user.save()
 
         return types.RateUserSportResponse(ok=True)
+
+
+@login_required
+class RegisterPush(graphene.Mutation):
+    class Arguments:
+        push_token = graphene.String(required=True)
+
+    Output = types.RegisterPushResponse
+
+    @login_required
+    def mutate(self, info, **kwargs):
+
+        user = info.context.user
+        push_token = kwargs.get("push_token")
+
+        try:
+            if user.push_token == push_token:
+                return types.RegisterPushResponse(ok=True)
+            else:
+                user.push_token = push_token
+                user.save()
+                return types.RegisterPushResponse(ok=True)
+
+        except IntegrityError as e:
+            print(e)
+            return types.RegisterPushResponse(ok=False)
+

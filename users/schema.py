@@ -39,3 +39,4 @@ class Mutation(object):
     update_user = mutations.UpdateUser.Field(required=True)
     update_sports = mutations.UpdateSports.Field(required=True)
     rate_user_sport = mutations.RateUserSport.Field(required=True)
+    register_push = mutations.RegisterPush.Field(required=True)

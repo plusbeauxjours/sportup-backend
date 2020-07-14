@@ -135,3 +135,7 @@ class UpdateSportsResponse(graphene.ObjectType):
 
 class RateUserSportResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class RegisterPushResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
