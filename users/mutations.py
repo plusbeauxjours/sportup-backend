@@ -181,7 +181,6 @@ class RateUserSport(graphene.Mutation):
         return types.RateUserSportResponse(ok=True)
 
 
-@login_required
 class RegisterPush(graphene.Mutation):
     class Arguments:
         push_token = graphene.String(required=True)
@@ -190,19 +189,11 @@ class RegisterPush(graphene.Mutation):
 
     @login_required
     def mutate(self, info, **kwargs):
-
         user = info.context.user
         push_token = kwargs.get("push_token")
-
-        try:
-            if user.push_token == push_token:
-                return types.RegisterPushResponse(ok=True)
-            else:
-                user.push_token = push_token
-                user.save()
-                return types.RegisterPushResponse(ok=True)
-
-        except IntegrityError as e:
-            print(e)
-            return types.RegisterPushResponse(ok=False)
-
+        if user.push_token == push_token:
+            return types.RegisterPushResponse(ok=True)
+        else:
+            user.push_token = push_token
+            user.save()
+            return types.RegisterPushResponse(ok=True)
