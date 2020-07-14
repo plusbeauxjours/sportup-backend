@@ -110,7 +110,6 @@ class UpdateUser(graphene.Mutation):
         password = graphene.String()
         first_name = graphene.String()
         last_name = graphene.String()
-        user_img = Upload()
 
     Output = types.UpdateUserResponse
 
@@ -121,7 +120,6 @@ class UpdateUser(graphene.Mutation):
         first_name = kwargs.get("first_name", "")
         last_name = kwargs.get("last_name", "")
         password = kwargs.get("password", "")
-        user_img = kwargs.get("user_img", None)
         if first_name != "":
             user.first_name = first_name
 
@@ -133,9 +131,6 @@ class UpdateUser(graphene.Mutation):
 
         if bio is not None:
             user.bio = bio
-
-        if user_img is not None:
-            user.user_img = user_img
 
         user.save()
 
@@ -152,13 +147,11 @@ class UpdateSports(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user = info.context.user
         sport_ids = kwargs.get("sport_ids")
-
         ups = models.UserPlaysSport.objects.filter(user=user)
-        user_sport_ids = [obj.sport.id for obj in ups]
+        ups_ids = [obj.sport.id for obj in ups]
 
-        to_add = [s_id for s_id in sport_ids if s_id not in user_sport_ids]
-        to_remove = [s_id for s_id in user_sport_ids if s_id not in sport_ids]
-
+        to_add = [int(s_id) for s_id in sport_ids if int(s_id) not in ups_ids]
+        to_remove = [s_id for s_id in ups_ids if str(s_id) not in sport_ids]
         user.add_sports(to_add)
         user.remove_sports(to_remove)
         user.save()

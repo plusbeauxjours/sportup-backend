@@ -54,4 +54,9 @@ class TeamMember(core_models.TimeStampedModel):
 class UserRatesTeam(core_models.TimeStampedModel):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     rating = models.IntegerField()
-    rated_by = models.OneToOneField("users.User", on_delete=models.CASCADE, blank=True)
+    rated_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="user_rates_team_rated_by",
+        blank=True,
+    )

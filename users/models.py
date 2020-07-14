@@ -96,7 +96,8 @@ class UserPlaysSport(core_models.TimeStampedModel):
         avg = UserRatesSport.objects.filter(rater=self.user).aggregate(Avg("rating"))[
             "rating__avg"
         ]
-        return round(avg, 1)
+        if avg:
+            return round(avg, 1)
 
     def __str__(self):
         return self.sport.name
@@ -108,4 +109,9 @@ class UserRatesSport(core_models.TimeStampedModel):
         UserPlaysSport, related_name="rated_user_sport_user", on_delete=models.CASCADE
     )
     rating = models.IntegerField()
-    rated_by = models.OneToOneField(User, on_delete=models.CASCADE, blank=True)
+    rated_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="user_rates_sport_rated_by",
+        blank=True,
+    )
