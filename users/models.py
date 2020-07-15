@@ -21,16 +21,12 @@ class User(AbstractUser):
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
-    following = models.ManyToManyField("self", related_name="followers", blank=True)
+    following = models.ManyToManyField(
+        "self", related_name="followers", symmetrical=False, blank=True
+    )
     sports = models.ManyToManyField(
         "sports.Sport", through="UserPlaysSport", blank=True
     )
-
-    def followers_count(self):
-        return self.followers.all().count()
-
-    def following_count(self):
-        return self.following.all().count()
 
     def follow_user(self, user):
         self.following.add(user)

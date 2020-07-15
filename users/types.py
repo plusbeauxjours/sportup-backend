@@ -47,8 +47,8 @@ class UserType(DjangoObjectType):
     followers = graphene.List(FollowType, page_num=graphene.Int())
     following = graphene.List(FollowType, page_num=graphene.Int())
     teams_count = graphene.Int()
-    followers_count = graphene.Int(source="followers_count")
-    following_count = graphene.Int(source="following_count")
+    followers_count = graphene.Int()
+    following_count = graphene.Int()
 
     class Meta:
         model = models.User
@@ -62,12 +62,18 @@ class UserType(DjangoObjectType):
         except models.User.DoesNotExist:
             return False
 
+    def resolve_following_count(self, info):
+        return self.following.count()
+
+    def resolve_followers_count(self, info):
+        return self.followers.count()
+
     def resolve_sports(self, info, **kwargs):
         return self.UserPlaysSport_user.all()
 
     def resolve_followers(self, info, **kwargs):
         page_num = kwargs.get("page_num", 1)
-        qs = models.User.objects.filter(pk__in=self.followers.all())
+        qs = self.followers.all()
         pg = Paginator(qs, 12)
         return pg.get_page(page_num)
 
