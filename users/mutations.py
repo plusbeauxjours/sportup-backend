@@ -43,7 +43,7 @@ class FollowUser(graphene.Mutation):
         user_id = kwargs.get("user_id")
         try:
             user_to_follow = models.User.objects.get(id=user_id)
-            user.following.add(user_to_follow)
+            user.follow_user(user_to_follow)
             user.save()
             return types.FollowUserResponse(following=user_to_follow)
 
@@ -64,6 +64,7 @@ class UnfollowUser(graphene.Mutation):
         try:
             user_to_unfollow = models.User.objects.get(id=user_id)
             user.following.remove(user_to_unfollow)
+            user.unfollow_user(user_to_unfollow)
             user.save()
             return types.UnfollowUserResponse(following=user_to_unfollow)
 

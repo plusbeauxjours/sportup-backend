@@ -22,7 +22,6 @@ class User(AbstractUser):
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
     following = models.ManyToManyField("self", related_name="followers", blank=True)
-    followers = models.ManyToManyField("self", related_name="following", blank=True)
     sports = models.ManyToManyField(
         "sports.Sport", through="UserPlaysSport", blank=True
     )
@@ -32,6 +31,12 @@ class User(AbstractUser):
 
     def following_count(self):
         return self.following.all().count()
+
+    def follow_user(self, user):
+        self.following.add(user)
+
+    def unfollow_user(self, user):
+        self.following.remove(user)
 
     def get_sport_ids(self):
         ups = UserPlaysSport.objects.filter(user=self)
