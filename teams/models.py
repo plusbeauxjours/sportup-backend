@@ -42,7 +42,8 @@ class Team(core_models.TimeStampedModel):
         avg = UserRatesTeam.objects.filter(team=self).aggregate(Avg("rating"))[
             "rating__avg"
         ]
-        return round(avg, 1)
+        if avg:
+            return round(avg, 1)
 
 
 class TeamMember(core_models.TimeStampedModel):
