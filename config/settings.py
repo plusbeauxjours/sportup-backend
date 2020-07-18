@@ -26,8 +26,8 @@ SECRET_KEY = "&k^q=t5ik+ttfdfruh5wv%($k$&)46%q7kirwf(03nx0ry6%w+"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ALLOWED_HOSTS = []
+ROOT_DIR = environ.Path(__file__) - 2
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -131,6 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(ROOT_DIR, "static")
 STATIC_URL = "/static/"
 
 # Media files
@@ -148,6 +149,3 @@ GRAPHENE = {
 }
 
 AUTH_USER_MODEL = "users.User"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
