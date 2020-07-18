@@ -117,3 +117,4 @@ class UserRatesSport(core_models.TimeStampedModel):
         related_name="user_rates_sport_rated_by",
         blank=True,
     )
+

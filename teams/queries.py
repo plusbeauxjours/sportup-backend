@@ -20,12 +20,12 @@ def resolve_get_teams_for_game(self, info, **kwargs):
     if sport_ids == []:
         teams = models.Team.objects.exclude(members__id=user.id)
         return types.GetTeamsForGameResponse(teams=teams)
+    else:
+        teams = models.Team.objects.exclude(members__id=user.id).filter(
+            sport__pk__in=sport_ids
+        )
 
-    teams = models.Team.objects.exclude(members__id=user.id).filter(
-        sport__pk__in=sport_ids
-    )
-
-    return types.GetTeamsForGameResponse(teams=teams)
+        return types.GetTeamsForGameResponse(teams=teams)
 
 
 @login_required

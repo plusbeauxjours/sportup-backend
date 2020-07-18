@@ -40,8 +40,9 @@ def resolve_get_users_for_games(self, info, **kwargs):
     if sport_ids == []:
         users = models.User.objects.exclude(id=user.id)
         return types.GetUsersForGamesResponse(users=users)
-    users = models.User.objects.exclude(id=user.id).filter(sports__pk__in=sport_ids)
-    return types.GetUsersForGamesResponse(users=users)
+    else:
+        users = models.User.objects.exclude(id=user.id).filter(sports__id__in=sport_ids)
+        return types.GetUsersForGamesResponse(users=users)
 
 
 def resolve_get_search_users(self, info, **kwargs):
