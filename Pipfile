@@ -16,6 +16,8 @@ python-dotenv = "*"
 django-graphql-jwt = "*"
 install = "*"
 django-filter = "*"
+django-environ = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.7"
