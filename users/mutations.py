@@ -3,7 +3,6 @@ from . import types, models
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required
-from graphene_file_upload.scalars import Upload
 
 
 class CreateUser(graphene.Mutation):
