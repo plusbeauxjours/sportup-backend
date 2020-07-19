@@ -149,3 +149,6 @@ GRAPHENE = {
 }
 
 AUTH_USER_MODEL = "users.User"
+
+UNSPLASH_KEY = env("UNSPLASH_KEY")
+
