@@ -10,7 +10,7 @@ class Command(BaseCommand):
         user_seeder = Seed.seeder()
         user_seeder.add_entity(
             user_models.User,
-            100,
+            50,
             {
                 "user_img": None,
                 "push_token": None,
