@@ -7,7 +7,6 @@ from django.db.models import Avg
 
 class Team(core_models.TimeStampedModel):
     team_name = models.CharField(max_length=50)
-    rating = models.FloatField(blank=True, null=True)
     cover_img = models.ImageField(upload_to="team_cover_imgs/", blank=True, null=True)
     sport = models.ForeignKey("sports.Sport", on_delete=models.PROTECT)
     members = models.ManyToManyField("users.User", through="TeamMember")

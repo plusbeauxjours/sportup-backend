@@ -10,7 +10,7 @@ class Command(BaseCommand):
         user_seeder = Seed.seeder()
         user_seeder.add_entity(
             user_models.User,
-            2,
+            100,
             {
                 "user_img": None,
                 "push_token": None,
@@ -27,7 +27,7 @@ class Command(BaseCommand):
         all_sports = sport_models.Sport.objects.all()
         ups_seeder.add_entity(
             user_models.UserPlaysSport,
-            50,
+            500,
             {
                 "user": lambda x: random.choice(all_users),
                 "sport": lambda x: random.choice(all_sports),
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         urs_seeder = Seed.seeder()
         urs_seeder.add_entity(
             user_models.UserRatesSport,
-            50,
+            1000,
             {
                 "rated_user_sport": lambda x: random.choice(all_ups),
                 "rating": lambda x: random.randint(0, 5),
