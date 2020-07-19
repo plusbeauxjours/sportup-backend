@@ -22,7 +22,7 @@ class User(AbstractUser):
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
     following = models.ManyToManyField(
-        "self", related_name="followers", symmetrical=False, blank=True
+        "self", related_name="followers", symmetrical=False, blank=True,
     )
     sports = models.ManyToManyField(
         "sports.Sport", through="UserPlaysSport", blank=True
@@ -59,14 +59,12 @@ class User(AbstractUser):
         user = User.objects.get(id=user_id)
         ups = UserPlaysSport.objects.get(user=user, sport=sport)
         try:
-            urus = UserRatesSport.objects.get(
-                rater=user, rated_user_sport=ups, rated_by=self
-            )
+            urus = UserRatesSport.objects.get(rated_user_sport=ups, rated_by=self)
             urus.rating = rating
             urus.save()
         except UserRatesSport.DoesNotExist:
             urus = UserRatesSport.objects.create(
-                rater=user, rated_user_sport=ups, rating=rating, rated_by=self
+                rated_user_sport=ups, rating=rating, rated_by=self
             )
 
     def rate_team(self, team_id, rating):
@@ -95,9 +93,9 @@ class UserPlaysSport(core_models.TimeStampedModel):
     sport = models.ForeignKey("sports.Sport", on_delete=models.CASCADE)
 
     def rating(self):
-        avg = UserRatesSport.objects.filter(rater=self.user).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+        avg = UserRatesSport.objects.filter(rated_user_sport=self).aggregate(
+            Avg("rating")
+        )["rating__avg"]
         if avg:
             return round(avg, 1)
 
@@ -106,7 +104,6 @@ class UserPlaysSport(core_models.TimeStampedModel):
 
 
 class UserRatesSport(core_models.TimeStampedModel):
-    rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rater")
     rated_user_sport = models.ForeignKey(
         UserPlaysSport, related_name="rated_user_sport_user", on_delete=models.CASCADE
     )
@@ -118,3 +115,5 @@ class UserRatesSport(core_models.TimeStampedModel):
         blank=True,
     )
 
+    def rater(self):
+        return self.rated_user_sport.user.username
