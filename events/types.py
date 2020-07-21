@@ -40,6 +40,8 @@ class GetSearchEventsResponse(graphene.ObjectType):
 
 class GetUpcomingEventsResponse(graphene.ObjectType):
     events = graphene.List(EventType)
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class CreateEventResponse(graphene.ObjectType):

@@ -25,7 +25,7 @@ class Query(object):
         types.GetUpcomingEventsResponse,
         resolver=queries.resolve_get_upcoming_events,
         required=True,
-        args={},
+        args={"page_num": graphene.Int()},
     )
 
 
