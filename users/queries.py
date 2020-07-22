@@ -46,6 +46,7 @@ def resolve_get_users_for_games(self, info, **kwargs):
         users = models.User.objects.exclude(id=user.id).filter(sports__id__in=sport_ids)
 
     pg = Paginator(users, 7)
+    users = pg.get_page(page_num)
     if page_num > pg.num_pages:
         return types.GetUsersForGamesResponse(
             posts=None, page_num=page_num, has_next_page=False

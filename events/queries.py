@@ -45,11 +45,10 @@ def resolve_get_upcoming_events(self, info, **kwargs):
     today = datetime.datetime.today()
 
     events = models.Event.objects.filter(Q(start_date__gte=today) | Q(start_date=None))
-    count = events.count()
     pg = Paginator(events, 7)
     if page_num > pg.num_pages:
         return types.GetUpcomingEventsResponse(
-            events=None, page_num=page_num, has_next_page=False, count=count
+            events=None, page_num=page_num, has_next_page=False
         )
 
     events = pg.get_page(page_num)
@@ -58,5 +57,5 @@ def resolve_get_upcoming_events(self, info, **kwargs):
     else:
         has_next_page = True
     return types.GetUpcomingEventsResponse(
-        events=events, page_num=page_num, has_next_page=has_next_page, count=count
+        events=events, page_num=page_num, has_next_page=has_next_page
     )

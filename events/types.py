@@ -42,7 +42,6 @@ class GetUpcomingEventsResponse(graphene.ObjectType):
     events = graphene.List(EventType)
     page_num = graphene.Int()
     has_next_page = graphene.Boolean()
-    count = graphene.Int()
 
 
 class CreateEventResponse(graphene.ObjectType):
