@@ -13,7 +13,7 @@ class Query(object):
         types.GetTeamsForGameResponse,
         resolver=queries.resolve_get_teams_for_game,
         required=True,
-        args={"sport_ids": graphene.List(graphene.String),},
+        args={"page_num": graphene.Int(), "sport_ids": graphene.List(graphene.String),},
     )
     get_search_teams = graphene.Field(
         types.GetSearchTeamsResponse,

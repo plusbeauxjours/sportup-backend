@@ -104,6 +104,8 @@ class GetUserFromUsernameReponse(graphene.ObjectType):
 
 class GetUsersForGamesResponse(graphene.ObjectType):
     users = graphene.List(UserType)
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class GetSearchUsersResponse(graphene.ObjectType):

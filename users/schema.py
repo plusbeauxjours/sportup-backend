@@ -20,7 +20,10 @@ class Query(object):
         types.GetUsersForGamesResponse,
         resolver=queries.resolve_get_users_for_games,
         required=True,
-        args={"sport_ids": graphene.List(graphene.String, required=True),},
+        args={
+            "page_num": graphene.Int(),
+            "sport_ids": graphene.List(graphene.String, required=True),
+        },
     )
     get_search_users = graphene.Field(
         types.GetSearchUsersResponse,

@@ -1,4 +1,5 @@
 from . import types, models
+from django.core.paginator import Paginator
 from graphql_jwt.decorators import login_required
 
 
@@ -14,18 +15,32 @@ def resolve_get_team(self, info, **kwargs):
 
 @login_required
 def resolve_get_teams_for_game(self, info, **kwargs):
-    user = info.context.user
+
+    page_num = kwargs.get("page_num", 1)
     sport_ids = kwargs.get("sport_ids", [])
+    user = info.context.user
 
     if sport_ids == []:
         teams = models.Team.objects.exclude(members__id=user.id)
-        return types.GetTeamsForGameResponse(teams=teams)
+
     else:
         teams = models.Team.objects.exclude(members__id=user.id).filter(
             sport__pk__in=sport_ids
         )
 
-        return types.GetTeamsForGameResponse(teams=teams)
+    pg = Paginator(teams, 7)
+    if page_num > pg.num_pages:
+        return types.GetTeamsForGameResponse(
+            posts=None, page_num=page_num, has_next_page=False
+        )
+    if page_num + 1 > pg.num_pages:
+        has_next_page = False
+    else:
+        has_next_page = True
+
+        return types.GetTeamsForGameResponse(
+            teams=teams, page_num=page_num, has_next_page=has_next_page
+        )
 
 
 @login_required

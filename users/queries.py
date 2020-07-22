@@ -1,5 +1,6 @@
 from . import types, models
 from django.db.models import Q
+from django.core.paginator import Paginator
 from graphql_jwt.decorators import login_required
 
 
@@ -34,14 +35,29 @@ def resolve_get_user_from_username(self, info, **kwargs):
 
 @login_required
 def resolve_get_users_for_games(self, info, **kwargs):
-    user = info.context.user
+
+    page_num = kwargs.get("page_num", 1)
     sport_ids = kwargs.get("sport_ids", [])
+    user = info.context.user
+
     if sport_ids == []:
         users = models.User.objects.exclude(id=user.id)
-        return types.GetUsersForGamesResponse(users=users)
     else:
         users = models.User.objects.exclude(id=user.id).filter(sports__id__in=sport_ids)
-        return types.GetUsersForGamesResponse(users=users)
+
+    pg = Paginator(users, 7)
+    if page_num > pg.num_pages:
+        return types.GetUsersForGamesResponse(
+            posts=None, page_num=page_num, has_next_page=False
+        )
+    if page_num + 1 > pg.num_pages:
+        has_next_page = False
+    else:
+        has_next_page = True
+
+        return types.GetUsersForGamesResponse(
+            users=users, page_num=page_num, has_next_page=has_next_page
+        )
 
 
 def resolve_get_search_users(self, info, **kwargs):

@@ -23,6 +23,8 @@ class GetTeamResponse(graphene.ObjectType):
 
 class GetTeamsForGameResponse(graphene.ObjectType):
     teams = graphene.List(TeamType)
+    page_num = graphene.Int()
+    has_next_page = graphene.Boolean()
 
 
 class GetTeamsForPlayerResponse(graphene.ObjectType):
