@@ -43,3 +43,5 @@ class Mutation(object):
     update_sports = mutations.UpdateSports.Field(required=True)
     rate_user_sport = mutations.RateUserSport.Field(required=True)
     register_push = mutations.RegisterPush.Field(required=True)
+    facebook_connect = mutations.FacebookConnect.Field(required=True)
+    apple_connect = mutations.AppleConnect.Field(required=True)

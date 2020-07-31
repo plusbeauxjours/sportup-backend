@@ -17,8 +17,12 @@ class User(AbstractUser):
         (GENDER_FEMALE, "Female"),
         (GENDER_OTHER, "Other"),
     )
+    apple_id = models.CharField(blank=True, null=True, max_length=80)
+    fb_id = models.CharField(blank=True, null=True, max_length=60)
     push_token = models.CharField(blank=True, null=True, max_length=200)
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
+    gender = models.CharField(
+        choices=GENDER_CHOICES, max_length=10, blank=True
+        )
     user_img = models.ImageField(upload_to="user_imgs/", null=True, blank=True)
     bio = models.TextField(blank=True)
     following = models.ManyToManyField(

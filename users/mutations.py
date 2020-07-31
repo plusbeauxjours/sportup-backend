@@ -1,7 +1,9 @@
 import graphene
+import random
+import json
 from . import types, models
-from django.db import IntegrityError
 from django.contrib.auth import get_user_model
+from graphql_jwt.shortcuts import get_token
 from graphql_jwt.decorators import login_required
 
 
@@ -197,3 +199,109 @@ class RegisterPush(graphene.Mutation):
             user.push_token = push_token
             user.save()
             return types.RegisterPushResponse(ok=True)
+
+
+class AppleConnect(graphene.Mutation):
+    class Arguments:
+        first_name = graphene.String()
+        last_name = graphene.String()
+        email = graphene.String()
+        apple_id = graphene.String(required=True)
+
+    Output = types.AppleConnectResponse
+
+    def mutate(self, info, **kwargs):
+
+        first_name = kwargs.get("first_name", "")
+        last_name = kwargs.get("last_name", "")
+        email = kwargs.get("email", "")
+        apple_id = kwargs.get("apple_id", "")
+
+        try:
+            user = models.User.objects.get(apple_id=apple_id)
+            token = get_token(user)
+            return types.AppleConnectResponse(ok=True, token=token)
+
+        except models.User.DoesNotExist:
+            with open(
+                "users/adjectives.json", mode="rt", encoding="utf-8"
+            ) as adjectives:
+                with open("users/nouns.json", mode="rt", encoding="utf-8") as nouns:
+                    adjectives = json.load(adjectives)
+                    nouns = json.load(nouns)
+                    if email != "":
+                        local, at, domain = email.rpartition("@")
+                        username = random.choice(adjectives) + local.capitalize()
+                    else:
+                        username = (
+                            random.choice(adjectives)
+                            + random.choice(nouns).capitalize()
+                        )
+
+                    user = models.User.objects.create_user(username)
+                    if first_name != "":
+                        user.first_name = first_name
+                    if last_name != "":
+                        user.last_name = last_name
+                    if apple_id != "":
+                        user.apple_id = apple_id
+                    if email != "":
+                        user.email = email
+                    user.has_apple_account = True
+                    user.save()
+
+                    token = get_token(user)
+                    return types.AppleConnectResponse(ok=True, token=token)
+
+
+class FacebookConnect(graphene.Mutation):
+    class Arguments:
+        first_name = graphene.String()
+        last_name = graphene.String()
+        email = graphene.String()
+        fb_id = graphene.String(required=True)
+
+    Output = types.FacebookConnectResponse
+
+    def mutate(self, info, **kwargs):
+
+        first_name = kwargs.get("first_name")
+        last_name = kwargs.get("last_name")
+        email = kwargs.get("email")
+        fb_id = kwargs.get("fb_id")
+
+        try:
+            user = models.User.objects.get(fb_id=fb_id)
+            token = get_token(user)
+            return types.FacebookConnectResponse(ok=True, token=token)
+
+        except models.User.DoesNotExist:
+            with open(
+                "users/adjectives.json", mode="rt", encoding="utf-8"
+            ) as adjectives:
+                with open("users/nouns.json", mode="rt", encoding="utf-8") as nouns:
+                    adjectives = json.load(adjectives)
+                    nouns = json.load(nouns)
+                    if email != "":
+                        local, at, domain = email.rpartition("@")
+                        username = random.choice(adjectives) + local.capitalize()
+                    else:
+                        username = (
+                            random.choice(adjectives)
+                            + random.choice(nouns).capitalize()
+                        )
+
+                    user = models.User.objects.create_user(username)
+                    if first_name != "":
+                        user.first_name = first_name
+                    if last_name != "":
+                        user.last_name = last_name
+                    if fb_id != "":
+                        user.fb_id = fb_id
+                    if email != "":
+                        user.email = email
+                    user.has_apple_account = True
+                    user.save()
+
+                    token = get_token(user)
+                    return types.AppleConnectResponse(ok=True, token=token)

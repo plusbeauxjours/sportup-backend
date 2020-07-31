@@ -147,3 +147,13 @@ class RateUserSportResponse(graphene.ObjectType):
 
 class RegisterPushResponse(graphene.ObjectType):
     ok = graphene.Boolean()
+
+
+class FacebookConnectResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+    token = graphene.String()
+
+
+class AppleConnectResponse(graphene.ObjectType):
+    ok = graphene.Boolean()
+    token = graphene.String()
