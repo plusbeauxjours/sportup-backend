@@ -29,19 +29,20 @@ def resolve_get_teams_for_game(self, info, **kwargs):
         )
 
     pg = Paginator(teams, 7)
-    teams = pg.get_page(page_num)
     if page_num > pg.num_pages:
         return types.GetTeamsForGameResponse(
             posts=None, page_num=page_num, has_next_page=False
         )
+
+    teams = pg.get_page(page_num)
     if page_num + 1 > pg.num_pages:
         has_next_page = False
     else:
         has_next_page = True
 
-        return types.GetTeamsForGameResponse(
-            teams=teams, page_num=page_num, has_next_page=has_next_page
-        )
+    return types.GetTeamsForGameResponse(
+        teams=teams, page_num=page_num, has_next_page=has_next_page
+    )
 
 
 @login_required
