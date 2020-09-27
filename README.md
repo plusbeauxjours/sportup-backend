@@ -2,7 +2,7 @@
 
 ### Introduction
 
-> Server for <a href="https://github.com/plusbeauxjours/pinner-app">SPORTUP-APP</a>
+> Server for <a href="https://github.com/plusbeauxjours/sportup-frontend">SPORTUP-APP</a>
 
 ### Technical Sheet
 
