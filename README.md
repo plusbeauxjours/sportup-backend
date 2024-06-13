@@ -10,4 +10,5 @@
 
 ### Portfolio Link
 
-> https://www.plusbeauxjours.com/projects/app/sportup-app
+> https://www.plusbeauxjours.info/projects/app/sportup
+
